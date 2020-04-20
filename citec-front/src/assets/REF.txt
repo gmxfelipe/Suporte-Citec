@@ -1,0 +1,15 @@
+# login.html:
+    https://getbootstrap.com/docs/4.3/examples/sign-in/
+    https://www.youtube.com/watch?v=Q16slwMglFI
+
+# login.css:
+    https://getbootstrap.com/docs/4.3/examples/sign-in/signin.css
+    https://css-tricks.com/centering-css-complete-guide/ 
+
+
+# menu.html:
+    https://getbootstrap.com/docs/4.3/examples/cover/#  
+    https://getbootstrap.com/docs/4.3/components/navbar/
+
+# checkbox:
+    https://bootsnipp.com/tags/checkbox

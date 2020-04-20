@@ -1,0 +1,218 @@
+<!-- CALENDÁRIO -->
+
+<!-- BIBLIOTECA UTILIZADA PARA A CRIAÇÃO DO CALENDÁRIO: https://mattlewis92.github.io/angular-calendar/# -->
+
+<div class="calendario container">
+  <div class="text-center m-4">
+    <span class="unidade">FIEC I</span>
+  </div>
+  <div class="row text-center">
+    <div class="col-md-4">
+      <div class="btn-group">
+        <div class="btn btn btn-outline-dark" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"
+          (viewDateChange)="closeOpenMonthViewDay()">
+          < </div> <div class="btn btn-outline-dark" mwlCalendarToday [(viewDate)]="viewDate">
+            Hoje
+        </div>
+        <div class="btn btn btn-outline-dark" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate"
+          (viewDateChange)="closeOpenMonthViewDay()">
+          >
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'pt-PT' }}</h3>
+    </div>
+    <div class="col-md-4">
+      <div class="btn-group">
+        <div class="btn btn btn-outline-dark" (click)="setView(CalendarView.Month)"
+          [class.active]="view === CalendarView.Month">
+          Mês
+        </div>
+        <div class="btn btn btn-outline-dark" (click)="setView(CalendarView.Week)"
+          [class.active]="view === CalendarView.Week">
+          Semana
+        </div>
+        <div class="btn btn btn-outline-dark" (click)="setView(CalendarView.Day)"
+          [class.active]="view === CalendarView.Day">
+          Dia
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br />
+<div [ngSwitch]="view">
+  <mwl-calendar-month-view [locale]="locale" *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events"
+    [refresh]="refresh" [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)"
+    (eventClicked)="eventClicked($event)">
+  </mwl-calendar-month-view>
+  <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="events"
+    (eventClicked)="eventClicked($event)" [locale]="locale" [refresh]="refresh">
+  </mwl-calendar-week-view>
+  <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="events"
+    (eventClicked)="eventClicked($event)" [locale]="locale" [refresh]="refresh">
+  </mwl-calendar-day-view>
+</div>
+<!-- /CALENDÁRIO -->
+<br /><br /><br />
+<!-- EDIÇÕES DOS EVENTOS /  ADICIONAR EVENTOS -->
+<div *ngIf="tipo == 'A'">
+  <h3>
+    Edite os eventos
+    <button class="btn btn btn-outline-dark pull-right" data-toggle="modal" data-target="#exampleModal">
+      Adicionar evento
+    </button>
+    <div class="clearfix"></div>
+  </h3>
+
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Titulo</th>
+          <th>Setor</th>
+          <th>Começa em</th>
+          <th>Termina em</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let event of events">
+          <td>
+            <input type="text" class="form-control" [(ngModel)]="event.title" (keyup)="refresh.next()" />
+          </td>
+          <td>
+            <input type="text" [(ngModel)]="event.color.primary" (change)="refresh.next()" />
+          </td>
+          <td>
+            <input class="form-control" type="text" mwlFlatpickr [(ngModel)]="event.start"
+              (ngModelChange)="refresh.next()" [altInput]="true" [convertModelValue]="true" [enableTime]="true"
+              dateFormat="Y-m-dTH:i" altFormat="F j, Y H:i" placeholder="Not set" />
+          </td>
+          <td>
+            <input class="form-control" type="text" mwlFlatpickr [(ngModel)]="event.end"
+              (ngModelChange)="refresh.next()" [altInput]="true" [convertModelValue]="true" [enableTime]="true"
+              dateFormat="Y-m-dTH:i" altFormat="F j, Y H:i" placeholder="Not set" />
+          </td>
+          <td>
+            <button class="btn btn-danger" (click)="deleteEvento(event)">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <br />
+</div>
+<!-- /EDIÇÕES DOS EVENTOS /  ADICIONAR EVENTOS -->
+<!-- MODAL DESCRICAO EVENTO -->
+<button data-toggle="modal" hidden id="modalEventoBtn1" data-target="#modalEvento">
+</button>
+<div class="modal fade" id="modalEvento" tabindex="-1" role="dialog" aria-labelledby="modalEventoLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalEventoLabel"><span *ngFor="let evento of eventos">{{evento.title}}</span></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="font120">
+          <div class="form-group">
+            <label class="text-dark">Começo do evento</label>
+            <textarea *ngFor="let evento of eventos" class="form-control text-dark font100" rows="1"
+              disabled>{{evento.start}}</textarea>
+          </div>
+          <div class="form-group">
+            <label class="text-dark">Fim do evento</label>
+            <textarea *ngFor="let evento of eventos" class="form-control text-dark font100" rows="1"
+              disabled>{{evento.end}}</textarea>
+          </div>
+          <div class="form-group">
+            <label class="text-dark ">Descrição do evento</label>
+            <textarea class="form-control text-dark font100" *ngFor="let evento of eventos" rows="3"
+              disabled>{{evento.descricao}}</textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /MODAL DESCRICAO EVENTO -->
+<!-- MODAL CADASTRO EVENTOS -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog container" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Adicione um novo evento</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body container">
+        <form>
+          <div class="form-group">
+            <label for="titleDoEvento">Titulo do evento</label>
+            <input name="titulo" type="text" class="form-control" [(ngModel)]="titleDoEvento"
+              [ngModelOptions]="{standalone: true}" id="titleDoEvento" placeholder="Digite o titulo" />
+          </div>
+          <div class="form-group">
+            <div class="row">
+              <div class="col">
+                <label class="mr-4">Inicio do evento:</label>
+              </div>
+              <div class="col">
+                <input name="start" class="form-control" [(ngModel)]="startDoEvento" type="text" mwlFlatpickr
+                  [altInput]="true" [convertModelValue]="true" [ngModelOptions]="{standalone: true}" [enableTime]="true"
+                  dateFormat="Y-m-dTH:i" altFormat="F j, Y H:i" placeholder="Defina uma data" />
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="row">
+              <div class="col">
+                <label class="mr-4">Fim do evento:</label>
+              </div>
+              <div class="col">
+                <input name="end" class="form-control" [(ngModel)]="endDoEvento" type="text" mwlFlatpickr
+                  [altInput]="true" [convertModelValue]="true" [ngModelOptions]="{standalone: true}" [enableTime]="true"
+                  dateFormat="Y-m-dTH:i" altFormat="F j, Y H:i" placeholder="Defina uma data"
+                  aria-describedby="endDoEventoHelp" />
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="exampleFormControlSelect1">Setor a ser reservado:</label>
+            <select name="color" [(ngModel)]="colorDoEvento" class="form-control" id="exampleFormControlSelect1">
+              <option selected value="red" class="text-danger">Palestras</option>
+              <option value="blue" class="text-primary">Pesquisas, desenvolvimento</option>
+              <option value="yellow" class="text-warning">Reuniões</option>
+              <option value="all">Todo o espaço</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="descricaoEvento" class="col-form-label">Descrição do evento: </label>
+            <textarea [(ngModel)]="descricaoEvento" class="form-control" id="descricaoEvento"
+              [ngModelOptions]="{standalone: true}" placeholder="Digite aqui a descrição do evento"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn btn-outline-dark"
+          (click)="cadastroEvento(titleDoEvento,startDoEvento,endDoEvento,colorDoEvento,descricaoEvento)">Adicionar</button>
+        <!-- (click)="cadastroEvento(titleDoEvento,startDoEvento,endDoEvento,colorDoEvento,descricaoEvento)" -->
+      </div>
+    </div>
+  </div>
+</div>
+<!-- MODAL CADASTRO EVENTOS -->

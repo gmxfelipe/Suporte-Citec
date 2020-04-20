@@ -1,0 +1,43 @@
+<div>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="home">CITEC</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link active" [routerLink]="[ '/home' ]">Agendas<span class="sr-only">(current)</span></a>
+        <a class="nav-item nav-link" [routerLink]="[ '/candidatura' ]">Candidatura</a>
+        <a class="nav-item nav-link" [routerLink]="[ '/avaliacao' ]">Avaliação</a>
+        <a class="nav-item nav-link" href="http://cronograma.fiecdev.kinghost.net/#/login">Gestão de projetos</a>
+        <a class="nav-item nav-link" [routerLink]="[ '/processos' ]">Processos</a>
+        <a class="nav-item nav-link" [routerLink]="[ '/projetos' ]">Projetos</a>
+        <a (click)="sair()" class="material-icons nav-item nav-link">
+          exit_to_app
+        </a>
+      </div>
+    </div>
+  </nav>
+</div>
+<div class="calendarios">
+  <ul class="nav nav-tabs" id="myTab" role="tablist" style="justify-content: center;">
+    <li class="nav-item">
+      <a class="nav-link active" id="fiecI-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+        aria-selected="true">FIEC I</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="fiecII-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+        aria-selected="false">FIEC II</a>
+    </li>
+  </ul>
+  <div class="tab-content container mt-4" id="myTabContent">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="fiecI-tab">
+      <app-fiec1></app-fiec1>
+    </div>
+    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="fiecII-tab">
+      <app-fiec2></app-fiec2>
+    </div>
+
+  </div>
+</div>

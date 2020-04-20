@@ -1,0 +1,291 @@
+<div class="border-bottom mb-4">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="home">CITEC</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link" [routerLink]="[ '/home' ]">Agendas</a>
+        <a class="nav-item nav-link" [routerLink]="[ '/candidatura' ]">Candidatura</a>
+        <a class="nav-item nav-link" [routerLink]="[ '/avaliacao' ]">Avaliação</a>
+        <a class="nav-item nav-link" href="http://cronograma.fiecdev.kinghost.net/#/login">Gestão de projetos</a>
+        <a class="nav-item nav-link" [routerLink]="[ '/processos' ]">Processos</a>
+        <a class="nav-item nav-link active" [routerLink]="[ '/projetos' ]">Projetos<span
+            class="sr-only">(current)</span></a>
+        <a (click)="sair()" class="material-icons nav-item nav-link">
+          exit_to_app
+        </a>
+      </div>
+    </div>
+  </nav>
+</div>
+<div class="container">
+  <div class="shadow p-1 mb-1 bg-light">
+    <!-- card -->
+    <div class="card bg-light border-0">
+      <div class="card-header bg-light text-center font-weight-bold">
+        <div class="row">
+          <div class="col">
+            <h4 class="h2">
+              Projetos
+            </h4>
+          </div>
+          <!-- FILTRO -->
+          <form class="form-inline my-2 my-lg-0">
+            <div class="col">
+              <input class="form-control mr-sm-2" type="search" [(ngModel)]="filtro" name="filtro"
+                placeholder="Pesquisar" aria-label="Pesquisar">
+            </div>
+            <div class="col">
+              <label for="cursoFiltro" class="text-dark mr-sm-2">Curso:</label>
+            </div>
+            <div class="col">
+              <select class="form-control text-dark mr-sm-2" #cursoFiltro id="cursoFiltro">
+                <option value="Todos" selected>Todos</option>
+                <option value="Administração">Administração</option>
+                <option value="Edificações">Edificações</option>
+                <option value="Enfermagem">Enfermagem</option>
+                <option value="Informática">Informática</option>
+                <option value="Farmácia">Farmácia</option>
+                <option value="Logística">Logística</option>
+                <option value="Design de interiores">Design de Interiores</option>
+                <option value="Nutrição">Nutrição</option>
+                <option value="Cozinha">Cozinha</option>
+                <option value="Química">Química</option>
+                <option value="Tecnólogo em processos químicos">Tecnólogo em processos químicos</option>
+                <option value="Mecânica">Mecânica</option>
+                <option value="Mecatrônica">Mecatrônica</option>
+                <option value="Segurança do trabalho">Segurança do trabalho</option>
+                <option value="Analises Clínicas">Analises Clínicas</option>
+                <option value="Projeto Externo">Projeto Externo</option>
+              </select>
+            </div>
+            <div class="col">
+              <button class="btn btn-outline-dark my-2 my-sm-0" type="submit" (click)="filtroFunc()">Pesquisar</button>
+            </div>
+          </form>
+          <!-- /FILTRO -->
+        </div>
+      </div>
+
+      <div class="card-body bg-light">
+        <!-- PROJETOS -->
+        <div class="row">
+          <div class="card m-1" *ngFor="let projeto of projetos" style="width: 22rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{projeto.nomeProjeto}}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">{{projeto.curso}}{{projeto.solicitante}}</h6>
+              <p class="card-text">{{projeto.resumo}}</p>
+              <a class="card-link pointer pointer" data-toggle="modal" data-target="#modalProjeto"
+                (click)="modal(projeto)">Ver
+                mais</a>
+            </div>
+          </div>
+        </div>
+        <!-- /PROJETOS -->
+      </div>
+    </div> <!-- / card -->
+
+    <!-- MODAL DOS PROJETOS -->
+    <div *ngFor="let projeto of projetoAtual">
+      <div class="modal fade" id="modalProjeto" tabindex="-1" role="dialog" aria-labelledby="modalProjetoLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalProjetoLabel">{{projeto.nomeProjeto}}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form class="font120">
+                <div class="row form-group" *ngIf="projeto.tipoProjeto != 'Projeto Externo'">
+                  <div class="col">
+                    <label for="curso" class="text-dark">Curso FIEC</label>
+                    <select class="form-control text-dark font100" id="curso" disabled>
+                      <option>{{projeto.curso}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="row form-group" *ngIf="projeto.tipoProjeto == 'Projeto Externo'">
+                  <div class="col">
+                    <label for="solicitante" class="text-dark">Solicitante</label>
+                    <select class="form-control text-dark font100" id="solicitante" disabled>
+                      <option>{{projeto.solicitante}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="input-nome-responsavel-projeto" class="text-dark ">Nome do Responsável</label>
+                  <textarea class="form-control text-dark font100" id="textarea-desc-projeto" rows="1" maxlength="1000"
+                    disabled>{{projeto.nomeResponsavel}}</textarea>
+                </div>
+                <div class="form-group">
+                  <label for="tipo-projeto" class="text-dark ">Tipo do Projeto</label>
+                  <select class="form-control text-dark font100" id="select-tipo-projeto" disabled>
+                    <option>{{projeto.tipo}}</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="desc-projeto " class="text-dark ">Resumo do Projeto</label>
+                  <textarea class="form-control text-dark font100" id="textarea-desc-projeto " rows="3" maxlength="1000"
+                    placeholder="máx. 1000 caraceteres" disabled>{{projeto.resumo}}</textarea>
+                </div>
+                <div class="form-group">
+                  <label for="desc-projeto " class="text-dark ">Equipe do Projeto</label>
+                  <textarea class="form-control text-dark font100" id="textarea-equipe-projeto " rows="3"
+                    maxlength="500" placeholder="Nome completo de cada integrante"
+                    disabled>{{projeto.equipe}}</textarea>
+                </div>
+              </form>
+              <div class="container">
+                <h5>Documentação</h5>
+                <div class="row">
+                  <div class="card m-1" style="width: 15rem;">
+                    <div class="card-body">
+                      <h5 class="card-title">Planejamento</h5>
+                      <div *ngFor="let documento of documentacaoPlanejamento">
+                        <a class="card-link pointer"
+                          (click)="onDownload(projeto.id,'Planejamento',documento.nomeArquivo)">{{documento.nomeArquivo}}</a>
+                      </div>
+                    </div>
+                    <div class="card-footer">
+                      <a class="card-link pointer" *ngIf="projeto.idusuario == idusuario"
+                        (click)="modalDocumentacao('Planejamento')">Atualizar</a>
+                    </div>
+                  </div>
+                  <div class="card m-1" style="width: 15rem;">
+                    <div class="card-body">
+                      <h5 class="card-title">Desenvolvimento</h5>
+                      <div *ngFor="let documento of documentacaoDesenvolvimento">
+                        <a class="card-link pointer"
+                          (click)="onDownload(projeto.id,'Desenvolvimento',documento.nomeArquivo)">{{documento.nomeArquivo}}</a>
+                      </div>
+                    </div>
+                    <div class="card-footer">
+                      <a class="card-link pointer" *ngIf="projeto.idusuario == idusuario"
+                        (click)="modalDocumentacao('Desenvolvimento')">Atualizar</a>
+                    </div>
+                  </div>
+                  <div class="card m-1" style="width: 15rem;">
+                    <div class="card-body">
+                      <h5 class="card-title">Homologação / Entrega Final</h5>
+                      <div *ngFor="let documento of documentacaoHomologacao">
+                        <a class="card-link pointer"
+                          (click)="onDownload(projeto.id,'Homologacao',documento.nomeArquivo)">{{documento.nomeArquivo}}</a>
+                      </div>
+                    </div>
+                    <div class="card-footer">
+                      <a class="card-link pointer" *ngIf="projeto.idusuario == idusuario"
+                        (click)="modalDocumentacao('Homologação')">Atualizar</a>
+                    </div>
+                  </div>
+                  <div class="card m-1" style="width: 15rem;">
+                    <div class="card-body">
+                      <h5 class="card-title">Detalhamento de requisitos</h5>
+                      <div *ngFor="let documento of documentacaoDetalhamento">
+                        <a class="card-link pointer"
+                          (click)="onDownload(projeto.id,'Detalhamento de requisitos',documento.nomeArquivo)">{{documento.nomeArquivo}}</a>
+                      </div>
+                    </div>
+                    <div class="card-footer">
+                      <a class="card-link pointer" *ngIf="projeto.idusuario == idusuario"
+                        (click)="modalDocumentacao('Detalhamento de requisitos')">Atualizar</a>
+                    </div>
+                  </div>
+                  <div class="card m-1" style="width: 15rem;">
+                    <div class="card-body">
+                      <h5 class="card-title">Testes</h5>
+                      <div *ngFor="let documento of documentacaoTestes">
+                        <a class="card-link pointer"
+                          (click)="onDownload(projeto.id,'Testes',documento.nomeArquivo)">{{documento.nomeArquivo}}</a>
+                      </div>
+                    </div>
+                    <div class="card-footer">
+                      <a class="card-link pointer" *ngIf="projeto.idusuario == idusuario"
+                        (click)="modalDocumentacao('Testes')">Atualizar</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" id="fecharModalAtual" data-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-primary" id="modalDocumentacaoBtn" hidden data-toggle="modal"
+        data-target="#modalDocumentacao">
+      </button>
+      <div class="modal fade" id="modalDocumentacao" tabindex="-1" role="dialog"
+        aria-labelledby="modalDocumentacaoLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalDocumentacaoLabel">{{projeto.nomeProjeto}} - {{etapa}}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="contianer">
+                <ul class="list-group mb-1">
+                  <div *ngIf="etapa == 'Planejamento'">
+                    <div *ngFor="let documento of documentacaoPlanejamento">
+                      <li class="list-group-item">{{documento.nomeArquivo}}
+                        <button class="btn btn-danger"
+                          (click)="excluirArquivo(documento.id,documento.caminho)">Excluir</button>
+                      </li>
+                    </div>
+                  </div>
+                  <div *ngIf="etapa == 'Desenvolvimento'">
+                    <div *ngFor="let documento of documentacaoDesenvolvimento">
+                      <li class="list-group-item">{{documento.nomeArquivo}}</li>
+                      <button class="btn btn-danger"
+                        (click)="excluirArquivo(documento.id,documento.caminho)">Excluir</button>
+                    </div>
+                  </div>
+                  <div *ngIf="etapa == 'Homologacao'">
+                    <div *ngFor="let documento of documentacaoHomologacao">
+                      <li class="list-group-item">{{documento.nomeArquivo}}</li>
+                      <button class="btn btn-danger"
+                        (click)="excluirArquivo(documento.id,documento.caminho)">Excluir</button>
+                    </div>
+                  </div>
+                  <div *ngIf="etapa == 'Detalhamento de requisitos'">
+                    <div *ngFor="let documento of documentacaoDetalhamento">
+                      <li class="list-group-item">{{documento.nomeArquivo}}</li>
+                      <button class="btn btn-danger"
+                        (click)="excluirArquivo(documento.id,documento.caminho)">Excluir</button>
+                    </div>
+                  </div>
+                  <div *ngIf="etapa == 'Testes'">
+                    <div *ngFor="let documento of documentacaoTestes">
+                      <li class="list-group-item">{{documento.nomeArquivo}}</li>
+                      <button class="btn btn-danger"
+                        (click)="excluirArquivo(documento.id,documento.caminho)">Excluir</button>
+                    </div>
+                  </div>
+                </ul>
+                <div class="custom-file mb-1">
+                  <input type="file" class="custom-file-input" id="customFile" (change)="onChange($event)" />
+                  <label for="customFile" class="custom-file-label" id="customFileLabel">Selecionar arquivo</label>
+                </div>
+                <button type="button" class="btn btn-primary"
+                  (click)="onUpload(etapa,projeto.id,projeto.idusuario)">Enviar</button>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" id="fecharModalAtual" data-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /MODAL DOS PROJETOS -->
+  </div>
+</div>

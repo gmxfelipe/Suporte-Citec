@@ -1,0 +1,1368 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="home">CITEC</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      <a class="nav-item nav-link" [routerLink]="[ '/home' ]">Agendas</a>
+      <a class="nav-item nav-link" [routerLink]="[ '/candidatura' ]">Candidatura</a>
+      <a class="nav-item nav-link active" [routerLink]="[ '/avaliacao' ]">Avaliação<span
+          class="sr-only">(current)</span></a>
+      <a class="nav-item nav-link" href="http://cronograma.fiecdev.kinghost.net/#/login">Gestão de projetos</a>
+      <a class="nav-item nav-link" [routerLink]="[ '/processos' ]">Processos</a>
+      <a class="nav-item nav-link" [routerLink]="[ '/projetos' ]">Projetos</a>
+      <a (click)="sair()" class="material-icons nav-item nav-link">
+        exit_to_app
+      </a>
+    </div>
+  </div>
+</nav>
+<nav>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist" style="justify-content: center;">
+    <a class="nav-item nav-link active" id="nav-emAvaliacao-tab" data-toggle="tab" href="#nav-emAvaliacao" role="tab"
+      aria-controls="nav-emAvaliacao" aria-selected="true">Em avaliação</a>
+    <a class="nav-item nav-link" id="nav-avaliados-tab" data-toggle="tab" href="#nav-avaliados" role="tab"
+      aria-controls="nav-avaliados" aria-selected="false">Em desenvolvimento</a>
+    <a href="#nav-revisao" class="nav-item nav-link" id="nav-revisao-tab" data-toggle="tab" role="tab"
+      aria-controls="nav-controls" aria-selected="false">Em revisão</a>
+    <a class="nav-item nav-link" id="nav-reprovados-tab" *ngIf="tipoUser == 'A'" data-toggle="tab"
+      href="#nav-reprovados" role="tab" aria-controls="nav-reprovados" aria-selected="true">Reprovados</a>
+  </div>
+</nav>
+<div class="tab-content mt-4" id="nav-tabContent" style="justify-content: center;">
+  <!-- Em avaliação -->
+  <div class="tab-pane fade show active" id="nav-emAvaliacao" role="tabpanel" aria-labelledby="nav-emAvaliacao-tab">
+    <div class="container">
+      <div class="shadow p-1 mb-1 bg-light">
+        <div class="card bg-light border-0">
+          <div class="card-header bg-light">
+            <h4 class="mb-0 text-center">
+              <a class="underline h2">Em avaliação</a>
+            </h4>
+          </div>
+          <div class="card-body bg-light table-responsive">
+            <table class="table table-bordered text-dark table-hover text-center">
+              <thead class="thead-light">
+                <th scope="col">Nome do Projeto</th>
+                <th scope="col">Tipo de Projeto</th>
+                <th scope="col">Proposta</th>
+                <th scope="col">Origem</th>
+              </thead>
+              <tbody *ngFor="let candidatura of candidaturas">
+                <tr>
+                  <td data-toggle="modal" (click)="modal(candidatura)" class="pointer" data-target="#modalDescricao">
+                    {{candidatura.nomeProjeto}}
+                  </td>
+                  <td data-toggle="modal" (click)="modal(candidatura)" class="pointer" data-target="#modalDescricao">
+                    {{candidatura.tipo}}
+                  </td>
+                  <td data-toggle="modal" (click)="modal(candidatura)" class="pointer" data-target="#modalDescricao">
+                    {{candidatura.descricao}}
+                  </td>
+                  <td data-toggle="modal" (click)="modal(candidatura)" class="pointer" data-target="#modalDescricao">
+                    {{candidatura.tipoProjeto}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Modal Projeto Declinado -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" hidden id="modalReprovacaobtn"
+              data-target="#modalReprovacao">
+            </button>
+            <div class="modal fade" *ngFor="let candidatura of candidaturasAtual" id="modalReprovacao" tabindex="-1"
+              role="dialog" aria-labelledby="modalReprovacaoLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="modalReprovacaoLabel">Motivo da reprovação</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <h5>Projeto: {{candidatura.nomeProjeto}}</h5>
+                    <form class="font120">
+                      <div class="form-group">
+                        <textarea class="form-control" id="textAreaRevisao" [(ngModel)]="revisao.outro_recomen"
+                          [ngModelOptions]="{standalone: true}" rows="3"></textarea>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger"
+                      (click)="reprovarCandidatura(candidatura)">Reprovar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /Modal Projeto Declinado -->
+
+            <!-- Modal Projeto Revisão -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" hidden id="modalRevisaobtn"
+              data-target="#modalRevisao">
+            </button>
+            <div class="modal fade" *ngFor="let candidatura of candidaturasAtual" id="modalRevisao" tabindex="-1"
+              role="dialog" aria-labelledby="modalRevisaoLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="modalRevisaoLabel">Motivo da revisão</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <h5>Projeto: {{candidatura.nomeProjeto}}</h5>
+                    <form class="font120">
+                      <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" [(ngModel)]="revisao.leis"
+                          [ngModelOptions]="{standalone: true}" id="check1">
+                        <label class="form-check-label" for="check1">Infringe leis</label>
+                      </div>
+                      <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" [(ngModel)]="revisao.objetivo_info"
+                          [ngModelOptions]="{standalone: true}" id="check2">
+                        <label class="form-check-label" for="check2">Objetivo do projeto incompreendido/Poucas
+                          informações</label>
+                      </div>
+                      <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" [(ngModel)]="revisao.orcamento"
+                          [ngModelOptions]="{standalone: true}" id="check3">
+                        <label for="check3" class="form-check-label">Valor do orçamento</label>
+                      </div>
+                      <div class="form-group">
+                        <label for="textAreaRevisao">Outro/Recomendações</label>
+                        <textarea class="form-control" id="textAreaRevisao" [(ngModel)]="revisao.outro_recomen"
+                          [ngModelOptions]="{standalone: true}" rows="3"></textarea>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-warning text-white" (click)="enviarRevisao(candidatura)">Mandar
+                      para a
+                      revisão</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /Modal Projeto Revisão -->
+
+            <!-- Modais -->
+            <div *ngFor="let candidatura of candidaturasAtual" class="modal fade" id="modalDescricao" tabindex="-1"
+              role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+              <!-- Modal TCC Startup -->
+              <div *ngIf="candidatura.tipoProjeto == 'TCC Startup'">
+                <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="ModalLabel">{{candidatura.nomeProjeto}} (TCC Startup)</h5>
+                      <button type="button" class="close" data-dismiss="modal" id="fecharModalAtual"
+                        aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form class="font120">
+                        <div class="row form-group">
+                          <div class="col">
+                            <label for="select-curso" class="text-dark">Curso FIEC</label>
+                            <select class="form-control text-dark font100" id=" select-curso" disabled>
+                              <option>{{candidatura.curso}}</option>
+                            </select>
+                          </div>
+                          <div class="col">
+                            <label for="select-periodo-curso" class="text-dark">
+                              Periodo
+                            </label>
+                            <select class="form-control text-dark font100" id="select-periodo-curso" disabled>
+                              <option>{{candidatura.periodo}}</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="row form-group">
+                          <div class="col">
+                            <label for="select-modulo-curso" class="text-dark ">
+                              Módulo
+                            </label>
+                            <select class="form-control text-dark font100" id="select-modulo-curso" disabled>
+                              <option>{{candidatura.modulo}}</option>
+                            </select>
+                          </div>
+                          <div class="col">
+                            <label for="select-turma-curso" class="text-dark ">
+                              Turma
+                            </label>
+                            <select class="form-control text-dark font100" id="select-turma-curso" disabled>
+                              <option>{{candidatura.turma}}</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="input-nome-responsavel-projeto" class="text-dark ">Nome do Responsável</label>
+                          <textarea class="form-control text-dark font100" id="textarea-desc-projeto" rows="1"
+                            maxlength="1000" disabled>{{candidatura.nomeResponsavel}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="tipo-projeto" class="text-dark ">Tipo do Projeto</label>
+                          <select class="form-control text-dark font100" id="select-tipo-projeto" disabled>
+                            <option>{{candidatura.tipo}}</option>
+                          </select>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="desc-projeto " class="text-dark ">Resumo do Projeto</label>
+                          <textarea class="form-control text-dark font100" id="textarea-desc-projeto " rows="3"
+                            maxlength="1000" placeholder="máx. 1000 caraceteres"
+                            disabled>{{candidatura.resumo}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="desc-projeto " class="text-dark ">Descrição do Projeto</label>
+                          <textarea class="form-control text-dark font100" id="textarea-desc-projeto " rows="3"
+                            placeholder="Detalhes da proposta" disabled>{{candidatura.descricao}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="desc-projeto " class="text-dark ">Equipe do Projeto</label>
+                          <textarea class="form-control text-dark font100" id="textarea-equipe-projeto " rows="3"
+                            maxlength="500" placeholder="Nome completo de cada integrante"
+                            disabled>{{candidatura.equipe}}</textarea>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="modal-footer" *ngIf="tipoUser == 'A'">
+                      <button class="btn btn-danger" (click)="modalReprovacao()">Reprovar</button>
+                      <button class="btn btn-warning text-white" (click)="modalRevisao()">Revisão</button>
+                      <button class="btn btn-primary" (click)="aprovarCandidatura(candidatura)">Aprovar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /Modal TCC Startup -->
+              <!-- Modal Projeto Interno -->
+              <div *ngIf="candidatura.tipoProjeto == 'Projeto Interno'">
+                <div class="modal-dialog modal-lg" role=" document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="ModalLabel">{{candidatura.nomeProjeto}} (Projeto Interno)</h5>
+                      <button type="button" class="close" data-dismiss="modal" id="fecharModalAtual"
+                        aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form class="font120">
+                        <div class="form-group">
+                          <label for="curso-fiec" class="text-dark">Curso FIEC</label>
+                          <select class="form-control text-dark font100" id="select-curso-fiec" disabled>
+                            <option>{{candidatura.curso}}</option>
+                          </select>
+                        </div>
+
+
+                        <div class="form-group">
+                          <label for="nome-responsavel" class="text-dark">Nome do Responsável</label>
+                          <textarea class="form-control text-dark font100" id="nome-responsavel" rows="1"
+                            maxlength="1000" disabled>{{candidatura.nomeResponsavel}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="tipo-Projeto " class="text-dark ">Tipo do Projeto</label>
+                          <select class="form-control text-dark font100" id="select-tipo-Projeto" disabled>
+                            <option>{{candidatura.tipo}}</option>
+                          </select>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="resumo-Projeto " class="text-dark ">Resumo do Projeto </label>
+                          <textarea class="form-control text-dark font100" id="resumo-Projeto " rows="3"
+                            maxlength="1000" disabled>{{candidatura.resumo}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="desc-Projeto " class="text-dark ">Descrição do Projeto</label>
+                          <textarea class="form-control text-dark font100" id="desc-Projeto" rows="3"
+                            disabled>{{candidatura.descricao}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="equipe-Projeto " class="text-dark ">Equipe do Projeto</label>
+                          <textarea class="form-control text-dark font100" id="equipe-Projeto" rows="3" maxlength="1000"
+                            disabled>{{candidatura.equipe}}</textarea>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="modal-footer" *ngIf="tipoUser == 'A'">
+                      <button class="btn btn-danger" (click)="modalReprovacao()">Reprovar</button>
+                      <button class="btn btn-warning text-white" (click)="modalRevisao()">Revisão</button>
+                      <button class="btn btn-primary" (click)="aprovarCandidatura(candidatura)">Aprovar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /Modal Projeto Interno -->
+              <!-- Modal Projeto Externo -->
+              <div *ngIf="candidatura.tipoProjeto == 'Projeto Externo'">
+                <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="ModalLabel">{{candidatura.nomeProjeto}} (Projeto Externo)
+                      </h5>
+                      <button type="button" class="close" data-dismiss="modal" id="fecharModalAtual"
+                        aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form class="font120">
+                        <div class="row form-group">
+                          <div class="col">
+                            <label for="solicitante" class="text-dark ">Solicitante</label>
+                            <textarea class="form-control text-dark font100" id="solicitante" rows="1"
+                              disabled>{{candidatura.solicitante}}</textarea>
+                          </div>
+                          <div class="col">
+                            <label for="tipo-solicitante" class="text-dark ">Filiação</label>
+                            <select class="form-control text-dark font100" id="select-tipo-solicitante" disabled>
+                              <option>{{candidatura.filiacao}}</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="row form-group">
+                          <div class="col">
+                            <label for="nome-responsavel" class="text-dark ">Nome do Responsável</label>
+                            <textarea class="form-control text-dark font100" id="nome-responsavel" rows="1"
+                              disabled>{{candidatura.nomeResponsavel}}</textarea>
+                          </div>
+                          <div class="col">
+                            <label for="telefone-responsavel" class="text-dark ">Telefone do Responsável</label>
+                            <textarea class="form-control text-dark font100" id="telefone-responsavel" rows="1"
+                              disabled>{{candidatura.telefoneResponsavel}}</textarea>
+                          </div>
+                        </div>
+
+                        <div class="row form-group">
+                          <div class="col-sm-6">
+                            <label for="email-responsavel" class="text-dark ">E-mail do Responsável</label>
+                            <textarea class="form-control text-dark font100" id="email-responsavel" rows="1"
+                              disabled>{{candidatura.emailResponsavel}}</textarea>
+                          </div>
+                          <div class="col">
+                            <label for="orcamentoProjeto" class="text-dark ">Orçamento do projeto</label>
+                            <textarea class="form-control text-dark font100" id="orcamentoProjeto" rows="1"
+                              disabled>R$ {{candidatura.orcamentoProjeto}}</textarea>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="tipo-projeto" class="text-dark ">Tipo do projeto</label>
+                          <select class="form-control  text-dark font100" id="select-tipo-projeto" disabled>
+                            <option>{{candidatura.tipo}}</option>
+                          </select>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="resumo-Projeto " class="text-dark ">Resumo do Projeto </label>
+                          <textarea class="form-control text-dark font100" id="resumo-Projeto " rows="3"
+                            maxlength="1000" disabled>{{candidatura.resumo}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="desc-Projeto " class="text-dark ">Descrição do Projeto</label>
+                          <textarea class="form-control text-dark font100" id="desc-Projeto" rows="3"
+                            disabled>{{candidatura.descricao}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="equipe-Projeto " class="text-dark ">Equipe do Projeto</label>
+                          <textarea class="form-control text-dark font100" id="equipe-Projeto" rows="3" maxlength="1000"
+                            disabled>{{candidatura.equipe}}</textarea>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="modal-footer" *ngIf="tipoUser == 'A'">
+                      <button class="btn btn-danger" (click)="modalReprovacao()">Reprovar</button>
+                      <button class="btn btn-warning text-white" (click)="modalRevisao()">Revisão</button>
+                      <button class="btn btn-primary" (click)="aprovarCandidatura(candidatura)">Aprovar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /Modal Projeto Externo -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /Em avaliação -->
+  <!-- Avaliados -->
+  <div class="tab-pane fade" id="nav-avaliados" role="tabpanel" aria-labelledby="nav-avaliados-tab">
+    <div class="container">
+      <div class="shadow p-1 mb-1 bg-light">
+        <div class="card bg-light border-0">
+          <div class="card-header bg-light">
+            <h4 class="mb-0 text-center">
+              <a class="underline h2">Avaliados/Em desenvolvimento</a>
+            </h4>
+          </div>
+          <div class="card-body bg-light table-responsive">
+            <table class="table text-dark table-bordered table-hover text-center">
+              <thead class="thead-light">
+                <th scope="col">Nome do Projeto</th>
+                <th scope="col">Tipo de Projeto</th>
+                <th scope="col">Proposta</th>
+                <th scope="col">Origem</th>
+                <th scope="col">Data Aprovação</th>
+              </thead>
+              <tbody *ngFor="let projetos of emDesenvolvimento">
+                <tr>
+                  <td data-toggle="modal" (click)="modal(projetos)" class="pointer"
+                    data-target="#modalEmDesenvolvimento">
+                    {{projetos.nomeProjeto}}
+                  </td>
+                  <td data-toggle="modal" (click)="modal(projetos)" class="pointer"
+                    data-target="#modalEmDesenvolvimento">
+                    {{projetos.tipo}}
+                  </td>
+                  <td data-toggle="modal" (click)="modal(projetos)" class="pointer"
+                    data-target="#modalEmDesenvolvimento">
+                    {{projetos.descricao}}
+                  </td>
+                  <td data-toggle="modal" (click)="modal(projetos)" class="pointer"
+                    data-target="#modalEmDesenvolvimento">
+                    {{projetos.tipoProjeto}}
+                  </td>
+                  <td class="pointer" data-toggle="modal" data-target="#modalEmDesenvolvimento"
+                    (click)="modal(projetos)">
+                    {{projetos.dataAprovacao}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div *ngFor="let candidatura of candidaturasAtual" class="modal fade" id="modalEmDesenvolvimento"
+              tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+              <!-- Modal TCC Startup -->
+              <div *ngIf="candidatura.tipoProjeto == 'TCC Startup'">
+                <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="ModalLabel">{{candidatura.nomeProjeto}} (TCC Startup)</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form class="font120">
+                        <div class="row form-group">
+                          <div class="col">
+                            <label for="select-curso" class="text-dark">Curso FIEC</label>
+                            <select class="form-control text-dark font100" id=" select-curso" disabled>
+                              <option>{{candidatura.curso}}</option>
+                            </select>
+                          </div>
+                          <div class="col">
+                            <label for="select-periodo-curso" class="text-dark">
+                              Periodo
+                            </label>
+                            <select class="form-control text-dark font100" id="select-periodo-curso" disabled>
+                              <option>{{candidatura.periodo}}</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="row form-group">
+                          <div class="col">
+                            <label for="select-modulo-curso" class="text-dark ">
+                              Módulo
+                            </label>
+                            <select class="form-control text-dark font100" id="select-modulo-curso" disabled>
+                              <option>{{candidatura.modulo}}</option>
+                            </select>
+                          </div>
+                          <div class="col">
+                            <label for="select-turma-curso" class="text-dark ">
+                              Turma
+                            </label>
+                            <select class="form-control text-dark font100" id="select-turma-curso" disabled>
+                              <option>{{candidatura.turma}}</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="input-nome-responsavel-projeto" class="text-dark ">Nome do Responsável</label>
+                          <textarea class="form-control text-dark font100" id="textarea-desc-projeto" rows="1"
+                            maxlength="1000" disabled>{{candidatura.nomeResponsavel}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="tipo-projeto" class="text-dark ">Tipo do Projeto</label>
+                          <select class="form-control text-dark font100" id="select-tipo-projeto" disabled>
+                            <option>{{candidatura.tipo}}</option>
+                          </select>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="desc-projeto " class="text-dark ">Resumo do Projeto</label>
+                          <textarea class="form-control text-dark font100" id="textarea-desc-projeto " rows="3"
+                            maxlength="1000" placeholder="máx. 1000 caraceteres"
+                            disabled>{{candidatura.resumo}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="desc-projeto " class="text-dark ">Descrição do Projeto</label>
+                          <textarea class="form-control text-dark font100" id="textarea-desc-projeto " rows="3"
+                            placeholder="Detalhes da proposta" disabled>{{candidatura.descricao}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="desc-projeto " class="text-dark ">Equipe do Projeto</label>
+                          <textarea class="form-control text-dark font100" id="textarea-equipe-projeto " rows="3"
+                            maxlength="500" placeholder="Nome completo de cada integrante"
+                            disabled>{{candidatura.equipe}}</textarea>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /Modal TCC Startup -->
+              <!-- Modal Projeto Interno -->
+              <div *ngIf="candidatura.tipoProjeto == 'Projeto Interno'">
+                <div class="modal-dialog modal-lg" role=" document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="ModalLabel">{{candidatura.nomeProjeto}} (Projeto Interno)</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form class="font120">
+                        <div class="form-group">
+                          <label for="curso-fiec" class="text-dark">Curso FIEC</label>
+                          <select class="form-control text-dark font100" id="select-curso-fiec" disabled>
+                            <option>{{candidatura.curso}}</option>
+                          </select>
+                        </div>
+
+
+                        <div class="form-group">
+                          <label for="nome-responsavel" class="text-dark">Nome do Responsável</label>
+                          <textarea class="form-control text-dark font100" id="nome-responsavel" rows="1"
+                            maxlength="1000" disabled>{{candidatura.nomeResponsavel}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="tipo-Projeto " class="text-dark ">Tipo do Projeto</label>
+                          <select class="form-control text-dark font100" id="select-tipo-Projeto" disabled>
+                            <option>{{candidatura.tipo}}</option>
+                          </select>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="resumo-Projeto " class="text-dark ">Resumo do Projeto </label>
+                          <textarea class="form-control text-dark font100" id="resumo-Projeto " rows="3"
+                            maxlength="1000" placeholder="máx. 1000 caraceteres"
+                            disabled>{{candidatura.resumo}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="desc-Projeto " class="text-dark ">Descrição do Projeto</label>
+                          <textarea class="form-control text-dark font100" id="desc-Projeto" rows="3"
+                            placeholder="Detalhes da proposta" disabled>{{candidatura.descricao}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="equipe-Projeto " class="text-dark ">Equipe do Projeto</label>
+                          <textarea class="form-control text-dark font100" id="equipe-Projeto" rows="3" maxlength="1000"
+                            placeholder="Nome completo de cada integrante" disabled>{{candidatura.equipe}}</textarea>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /Modal Projeto Interno -->
+              <!-- Modal Projeto Externo -->
+              <div *ngIf="candidatura.tipoProjeto == 'Projeto Externo'">
+                <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="ModalLabel">{{candidatura.nomeProjeto}} (Projeto Externo)
+                      </h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form class="font120">
+                        <div class="row form-group">
+                          <div class="col">
+                            <label for="solicitante" class="text-dark ">Solicitante</label>
+                            <textarea class="form-control text-dark font100" id="solicitante" rows="1"
+                              disabled>{{candidatura.solicitante}}</textarea>
+                          </div>
+                          <div class="col">
+                            <label for="tipo-solicitante" class="text-dark ">Filiação</label>
+                            <select class="form-control text-dark font100" id="select-tipo-solicitante" disabled>
+                              <option>{{candidatura.filiacao}}</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="row form-group">
+                          <div class="col">
+                            <label for="nome-responsavel" class="text-dark ">Nome do Responsável</label>
+                            <textarea class="form-control text-dark font100" id="nome-responsavel" rows="1"
+                              disabled>{{candidatura.nomeResponsavel}}</textarea>
+                          </div>
+                          <div class="col">
+                            <label for="telefone-responsavel" class="text-dark ">Telefone do Responsável</label>
+                            <textarea class="form-control text-dark font100" id="telefone-responsavel" rows="1"
+                              disabled>{{candidatura.telefoneResponsavel}}</textarea>
+                          </div>
+                        </div>
+
+                        <div class="row form-group">
+                          <div class="col-sm-6">
+                            <label for="email-responsavel" class="text-dark ">E-mail do Responsável</label>
+                            <textarea class="form-control text-dark font100" id="email-responsavel" rows="1"
+                              disabled>{{candidatura.emailResponsavel}}</textarea>
+                          </div>
+                          <div class="col">
+                            <label for="remuneracao" class="text-dark ">Remuneração</label>
+                            <textarea class="form-control text-dark font100" id="remuneracao" rows="1"
+                              disabled>R$ {{candidatura.remuneracao}}</textarea>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="tipo-projeto" class="text-dark ">Tipo do projeto</label>
+                          <select class="form-control  text-dark font100" id="select-tipo-projeto" disabled>
+                            <option>{{candidatura.tipo}}</option>
+                          </select>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="resumo-Projeto " class="text-dark ">Resumo do Projeto </label>
+                          <textarea class="form-control text-dark font100" id="resumo-Projeto " rows="3"
+                            maxlength="1000" placeholder="máx. 1000 caraceteres"
+                            disabled>{{candidatura.resumo}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="desc-Projeto " class="text-dark ">Descrição do Projeto</label>
+                          <textarea class="form-control text-dark font100" id="desc-Projeto" rows="3"
+                            placeholder="Detalhes da proposta" disabled>{{candidatura.descricao}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="equipe-Projeto " class="text-dark ">Equipe do Projeto</label>
+                          <textarea class="form-control text-dark font100" id="equipe-Projeto" rows="3" maxlength="1000"
+                            placeholder="Nome completo de cada integrante" disabled>{{candidatura.equipe}}</textarea>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /Modal Projeto Externo -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /Avaliados -->
+  <!-- Revisão -->
+  <div class="tab-pane fade" id="nav-revisao" role="tabpanel" aria-labelledby="nav-revisao-tab">
+    <div class="container">
+      <div class="shadow p-1 mb-1 bg-light">
+        <div class="card bg-light border-0">
+          <div class="card-header bg-light">
+            <h4 class="mb-0 text-center">
+              <a class="underline h2">Em revisão</a>
+            </h4>
+          </div>
+          <div class="card-body bg-light table-responsive">
+            <table class="table table-bordered text-dark table-hover text-center">
+              <thead class="thead-light">
+                <th scope="col">Nome do Projeto</th>
+                <th scope="col">Tipo de Projeto</th>
+                <th scope="col">Proposta</th>
+                <th scope="col">Origem</th>
+              </thead>
+              <tbody *ngFor="let candidatura of emRevisao">
+                <tr>
+                  <td data-toggle="modal" (click)="modal(candidatura)" class="pointer" data-target="#modalEmRevisao">
+                    {{candidatura.nomeProjeto}}
+                  </td>
+                  <td data-toggle="modal" (click)="modal(candidatura)" class="pointer" data-target="#modalEmRevisao">
+                    {{candidatura.tipo}}
+                  </td>
+                  <td data-toggle="modal" (click)="modal(candidatura)" class="pointer" data-target="#modalEmRevisao">
+                    {{candidatura.descricao}}
+                  </td>
+                  <td data-toggle="modal" (click)="modal(candidatura)" class="pointer" data-target="#modalEmRevisao">
+                    {{candidatura.tipoProjeto}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div *ngFor="let candidatura of candidaturasAtual" class="modal fade" id="modalEmRevisao" tabindex="-1"
+        role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+        <!-- Modal TCC Startup -->
+        <div *ngIf="candidatura.tipoProjeto == 'TCC Startup'">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="ModalLabel">{{candidatura.nomeProjeto}} (TCC Startup)</h5>
+                <button type="button" class="close" data-dismiss="modal" id="fecharModalAtual" aria-label="Fechar">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form class="font120">
+                  <div class="row form-group">
+                    <div class="col">
+                      <label for="select-curso" class="text-dark">Curso FIEC</label>
+                      <select class="form-control text-dark font100" #curso id="select-curso">
+                        <option [value]="candidatura.curso">{{candidatura.curso}}</option>
+                        <option value="Administração">Administração</option>
+                        <option value="Edificações">Edificações</option>
+                        <option value="Enfermagem">Enfermagem</option>
+                        <option value="Informática">Informática</option>
+                        <option value="Farmácia">Farmácia</option>
+                        <option value="Logística">Logística</option>
+                        <option value="Design de interiores">Design de Interiores</option>
+                        <option value="Nutrição">Nutrição</option>
+                        <option value="Cozinha">Cozinha</option>
+                        <option value="Química">Química</option>
+                        <option value="Tecnólogo em processos químicos">Tecnólogo em processos químicos</option>
+                        <option value="Mecânica">Mecânica</option>
+                        <option value="Mecatrônica">Mecatrônica</option>
+                        <option value="Segurança do trabalho">Segurança do trabalho</option>
+                        <option value="Analises Clínicas">Analises Clínicas</option>
+                      </select>
+                    </div>
+                    <div class="col">
+                      <label for="select-periodo-curso" class="text-dark ">
+                        Periodo
+                      </label>
+                      <select class="form-control text-dark font100" #periodo id="select-periodo-curso">
+                        <option [value]="candidatura.periodo">{{candidatura.periodo}}</option>
+                        <option value="Vespertino">Vespertino</option>
+                        <option value="Noturno">Noturno</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row form-group">
+                    <div class="col">
+                      <label for="select-modulo-curso" class="text-dark ">
+                        Módulo
+                      </label>
+                      <select class="form-control text-dark font100" #modulo id="select-modulo-curso">
+                        <option [value]="candidatura.modulo">{{candidatura.modulo}}</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                      </select>
+                    </div>
+                    <div class="col">
+                      <label for="select-modulo-curso" class="text-dark ">
+                        Modalidade
+                      </label>
+                      <select class="form-control text-dark font100" #modalidade id="select-modulo-curso">
+                        <option [value]="candidatura.modalidade">{{candidatura.modalidade}}</option>
+                        <option value="Regular">Regular</option>
+                        <option value="Mediotec">Mediotec</option>
+                      </select>
+                    </div>
+                    <div class="col">
+                      <label for="select-turma-curso" class="text-dark ">
+                        Turma
+                      </label>
+                      <select class="form-control text-dark font100" #turma id="select-turma-curso">
+                        <option [value]="candidatura.turma">{{candidatura.turma}}</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="nome-rojeto" class="text-dark">Nome do Projeto </label>
+                    <input type="text" class="form-control text-dark font100" id="input-nome-Projeto " #nomeProjeto
+                      [value]="candidatura.nomeProjeto" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="nome-rojeto" class="text-dark ">Nome do Responsável</label>
+                    <input type="text" class="form-control text-dark font100" id="input-nome-responsavel-Projeto "
+                      #nomeResponsavel [value]="candidatura.nomeResponsavel" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="tipo-Projeto " class="text-dark ">Tipo do Projeto </label>
+                    <select class="form-control text-dark font100" id="select-tipo-Projeto " #tipo>
+                      <option [value]="candidatura.tipo">{{candidatura.tipo}}</option>
+                      <option value="Software">Software</option>
+                      <option value="Design">Design</option>
+                      <option value="Jogo">Jogo</option>
+                      <option value="Remédio">Remédio</option>
+                      <option value="Máquina">Máquina</option>
+                      <option value="Produto">Produto</option>
+                      <option value="Serviço">Serviço</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="desc-Projeto " class="text-dark ">Resumo do Projeto </label>
+                    <textarea class="form-control text-dark font100" id="textarea-desc-Projeto " rows="3"
+                      maxlength="1000" #resumo>{{candidatura.resumo}}</textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="desc-Projeto " class="text-dark ">Descrição do Projeto</label>
+                    <textarea class="form-control text-dark font100" id="textarea-desc-Projeto " rows="3"
+                      #descricao>{{candidatura.descricao}}</textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="desc-Projeto " class="text-dark ">Equipe do Projeto </label>
+                    <textarea class="form-control text-dark font100" id="textarea-equipe-Projeto " rows="3"
+                      maxlength="500" #equipe>{{candidatura.equipe}}</textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="motivo" class="text-dark">Motivo da revisão/Dicas</label>
+                    <textarea class="form-control text-dark font100" id="motivo" rows="3"
+                      disabled>{{candidatura.revisaoReprovacao}}</textarea><small id="motivoHelp"
+                      class="form-text text-muted">Este campo te da dicas e o motivo do porque o projeto foi enviado
+                      para revisão!</small>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary" (click)="reenviarTcc()">Reenviar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /Modal TCC Startup -->
+        <!-- Modal Projeto Interno -->
+        <div *ngIf="candidatura.tipoProjeto == 'Projeto Interno'">
+          <div class="modal-dialog modal-lg" role=" document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="ModalLabel">{{candidatura.nomeProjeto}} (Projeto Interno)</h5>
+                <button type="button" class="close" data-dismiss="modal" id="fecharModalAtual" aria-label="Fechar">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form class="font120">
+                  <div class="form-group">
+                    <label for="curso-fiec" class="text-dark">Curso FIEC</label>
+                    <select class="form-control text-dark font100" #curso id="select-curso-fiec">
+                      <option [value]="candidatura.curso">{{candidatura.curso}}</option>
+                      <option value="Administração">Administração</option>
+                      <option value="Edificações">Edificações</option>
+                      <option value="Enfermagem">Enfermagem</option>
+                      <option value="Informática">Informática</option>
+                      <option value="Farmácia">Farmácia</option>
+                      <option value="Logística">Logística</option>
+                      <option value="Design de interiores">Design de Interiores</option>
+                      <option value="Nutrição">Nutrição</option>
+                      <option value="Cozinha">Cozinha</option>
+                      <option value="Química">Química</option>
+                      <option value="Tecnólogo em processos químicos">Tecnólogo em processos químicos</option>
+                      <option value="Mecânica">Mecânica</option>
+                      <option value="Mecatrônica">Mecatrônica</option>
+                      <option value="Segurança do trabalho">Segurança do trabalho</option>
+                      <option value="Analises Clínicas">Analises Clínicas</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="nome-projeto" class="text-dark">Nome do Projeto</label>
+                    <input type="text" class="form-control text-dark font100" #nomeProjeto id="nome-projeto"
+                      [value]="candidatura.nomeProjeto" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="nome-responsavel" class="text-dark">Nome do Responsável</label>
+                    <input type="text" class="form-control text-dark font100" #nomeResponsavel id="nome-responsavel"
+                      [value]="candidatura.nomeResponsavel" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="tipo-Projeto " class="text-dark ">Tipo do Projeto </label>
+                    <select class="form-control text-dark font100" #tipo id="select-tipo-Projeto">
+                      <option [value]="candidatura.tipo">{{candidatura.tipo}}</option>
+                      <option value="Software">Software</option>
+                      <option value="Design">Design</option>
+                      <option value="Jogo">Jogo</option>
+                      <option value="Remédio">Remédio</option>
+                      <option value="Máquina">Máquina</option>
+                      <option value="Produto">Produto</option>
+                      <option value="Serviço">Serviço</option>
+                      <option value="Outro">Outro</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="resumo-Projeto " class="text-dark ">Resumo do Projeto </label>
+                    <textarea class="form-control text-dark font100" #resumo id="resumo-Projeto " rows="3"
+                      maxlength="1000">{{candidatura.resumo}}</textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="desc-Projeto " class="text-dark ">Descrição do Projeto</label>
+                    <textarea class="form-control text-dark font100" #descricao id="desc-Projeto "
+                      rows="3">{{candidatura.descricao}}</textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="equipe-Projeto " class="text-dark ">Equipe do Projeto </label>
+                    <textarea class="form-control text-dark font100" id="equipe-Projeto" #equipe rows="3"
+                      maxlength="1000">{{candidatura.equipe}}</textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="motivo" class="text-dark">Motivo da revisão/Dicas</label>
+                    <textarea class="form-control text-dark font100" id="motivo" rows="3"
+                      disabled>{{candidatura.revisaoReprovacao}}</textarea><small id="motivoHelp"
+                      class="form-text text-muted">Este campo te da dicas e o motivo do porque o projeto foi enviado
+                      para revisão!</small>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary" (click)="reenviarInterno()">Reenviar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /Modal Projeto Interno -->
+        <!-- Modal Projeto Externo -->
+        <div *ngIf="candidatura.tipoProjeto == 'Projeto Externo'">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="ModalLabel">{{candidatura.nomeProjeto}} (Projeto Externo)
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" id="fecharModalAtual" aria-label="Fechar">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form class="font120">
+                  <div class="row form-group">
+                    <div class="col">
+                      <label for="solicitante" class="text-dark ">Solicitante </label>
+                      <input type="text" #solicitante class="form-control text-dark font100" id="input-solicitante"
+                        [value]="candidatura.solicitante">
+                    </div>
+                    <div class="col">
+                      <label for="tipo-solicitante" class="text-dark ">Filiação</label>
+                      <select class="form-control text-dark font100" #filiacao id="select-tipo-solicitante">
+                        <option [value]="candidatura.filiacao">{{candidatura.filiacao}}</option>
+                        <option value="Empresa privada">Empresa privada</option>
+                        <option value="Orgão público">Orgão Público</option>
+                        <option value="Associação/Comunidade">Associação/Comunidade</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="row form-group">
+                    <div class="col">
+                      <label for="nome-responsavel" class="text-dark ">Nome do Responsável</label>
+                      <input type="text" #nomeResponsavel class="form-control text-dark font100" id="input-nom-projeto"
+                        [value]="candidatura.nomeResponsavel">
+                    </div>
+                    <div class="col">
+                      <label for="telefone-responsavel" class="text-dark ">Telefone do Responsável</label>
+                      <input type="text" #telefoneResponsavel class="form-control text-dark font100"
+                        id="input-nom-projeto" [value]="candidatura.telefoneResponsavel">
+                    </div>
+                  </div>
+
+                  <div class="row form-group">
+                    <div class="col-sm-6">
+                      <label for="email-responsavel" class="text-dark ">E-mail do Responsável</label>
+                      <input type="email" #emailResponsavel class="form-control text-dark font100"
+                        id="input-nom-projeto" [value]="candidatura.emailResponsavel">
+                    </div>
+                  </div>
+
+                  <div class="row form-group">
+                    <div class="col">
+                      <label for="nome-rojeto" class="text-dark ">Nome do projeto</label>
+                      <input type="text" #nomeProjeto class="form-control text-dark font100" id="input-nom-projeto"
+                        [value]="candidatura.nomeProjeto">
+                    </div>
+                    <div class="col">
+                      <label for="input-orcamentoProjeto" class="text-dark ">Orçamento do projeto</label>
+                      <input type="number" #orcamentoProjeto class="form-control text-dark font100"
+                        id="input-orcamentoProjeto" [value]="candidatura.orcamentoProjeto">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="tipo-projeto" class="text-dark ">Tipo do projeto</label>
+                    <select class="form-control  text-dark font100" #tipo id="select-tipo-projeto">
+                      <option [value]="candidatura.tipo">{{candidatura.tipo}}</option>
+                      <option value="Software">Software</option>
+                      <option value="Design">Design</option>
+                      <option value="Jogo">Jogo</option>
+                      <option value="Remédio">Remédio</option>
+                      <option value="Máquina">Máquina</option>
+                      <option value="Produto">Produto</option>
+                      <option value="Serviço">Serviço</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="res-projeto" class="text-dark ">Resumo do projeto</label>
+                    <textarea class="form-control text-dark font100" #resumo id="textarea-res-projeto" rows="3"
+                      maxlength="1000">{{candidatura.resumo}}</textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="desc-projeto" class="text-dark ">Descrição do projeto</label>
+                    <textarea class="form-control text-dark font100" #descricao id="textarea-desc-projeto"
+                      rows="3">{{candidatura.descricao}}</textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="equipe-projeto" class="text-dark ">Equipe do projeto</label>
+                    <textarea class="form-control text-dark font100" #equipe id="textarea-equipe-projeto" rows="3"
+                      maxlength="1000">{{candidatura.equipe}}</textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="motivo" class="text-dark">Motivo da revisão/Dicas</label>
+                    <textarea class="form-control text-dark font100" id="motivo" rows="3"
+                      disabled>{{candidatura.revisaoReprovacao}}</textarea>
+                    <small id="motivoHelp" class="form-text text-muted">Este campo te da dicas e o motivo do porque o
+                      projeto foi enviado revisão!</small>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary" (click)="reenviarExterno()">Reenviar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /Modal Projeto Externo -->
+      </div>
+    </div>
+  </div>
+  <!-- /Revisão -->
+  <!-- Reprovados -->
+  <div class="tab-pane fade" id="nav-reprovados" role="tabpanel" aria-labelledby="nav-reprovados-tab">
+    <div class="container">
+      <div class="shadow p-1 mb-1 bg-light">
+        <div class="card bg-light border-0">
+          <div class="card-header bg-light">
+            <h4 class="mb-0 text-center">
+              <a class="underline h2">Reprovados</a>
+            </h4>
+          </div>
+          <div class="card-body bg-light table-responsive">
+            <table class="table text-dark table-bordered table-hover text-center">
+              <thead class="thead-light">
+                <th scope="col">Nome do Projeto</th>
+                <th scope="col">Motivo da reprovação</th>
+                <th scope="col">Proposta</th>
+                <th scope="col">Origem</th>
+              </thead>
+              <tbody *ngFor="let projetos of reprovados">
+                <tr>
+                  <td data-toggle="modal" (click)="modal(projetos)" class="pointer" data-target="#modalReprovados">
+                    {{projetos.nomeProjeto}}
+                  </td>
+                  <td data-toggle="modal" (click)="modal(projetos)" class="pointer" data-target="#modalReprovados">
+                    {{projetos.revisaoReprovacao}}
+                  </td>
+                  <td data-toggle="modal" (click)="modal(projetos)" class="pointer" data-target="#modalReprovados">
+                    {{projetos.descricao}}
+                  </td>
+                  <td data-toggle="modal" (click)="modal(projetos)" class="pointer" data-target="#modalReprovados">
+                    {{projetos.tipoProjeto}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div *ngFor="let candidatura of candidaturasAtual" class="modal fade" id="modalReprovados" tabindex="-1"
+              role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+              <!-- Modal TCC Startup -->
+              <div *ngIf="candidatura.tipoProjeto == 'TCC Startup'">
+                <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="ModalLabel">{{candidatura.nomeProjeto}} (TCC Startup)</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form class="font120">
+                        <div class="row form-group">
+                          <div class="col">
+                            <label for="select-curso" class="text-dark">Curso FIEC</label>
+                            <select class="form-control text-dark font100" id=" select-curso" disabled>
+                              <option>{{candidatura.curso}}</option>
+                            </select>
+                          </div>
+                          <div class="col">
+                            <label for="select-periodo-curso" class="text-dark">
+                              Periodo
+                            </label>
+                            <select class="form-control text-dark font100" id="select-periodo-curso" disabled>
+                              <option>{{candidatura.periodo}}</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="row form-group">
+                          <div class="col">
+                            <label for="select-modulo-curso" class="text-dark ">
+                              Módulo
+                            </label>
+                            <select class="form-control text-dark font100" id="select-modulo-curso" disabled>
+                              <option>{{candidatura.modulo}}</option>
+                            </select>
+                          </div>
+                          <div class="col">
+                            <label for="select-turma-curso" class="text-dark ">
+                              Turma
+                            </label>
+                            <select class="form-control text-dark font100" id="select-turma-curso" disabled>
+                              <option>{{candidatura.turma}}</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="input-nome-responsavel-projeto" class="text-dark ">Nome do Responsável</label>
+                          <textarea class="form-control text-dark font100" id="textarea-desc-projeto" rows="1"
+                            maxlength="1000" disabled>{{candidatura.nomeResponsavel}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="tipo-projeto" class="text-dark ">Tipo do Projeto</label>
+                          <select class="form-control text-dark font100" id="select-tipo-projeto" disabled>
+                            <option>{{candidatura.tipo}}</option>
+                          </select>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="desc-projeto " class="text-dark ">Resumo do Projeto</label>
+                          <textarea class="form-control text-dark font100" id="textarea-desc-projeto " rows="3"
+                            maxlength="1000" placeholder="máx. 1000 caraceteres"
+                            disabled>{{candidatura.resumo}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="desc-projeto " class="text-dark ">Descrição do Projeto</label>
+                          <textarea class="form-control text-dark font100" id="textarea-desc-projeto " rows="3"
+                            placeholder="Detalhes da proposta" disabled>{{candidatura.descricao}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="desc-projeto " class="text-dark ">Equipe do Projeto</label>
+                          <textarea class="form-control text-dark font100" id="textarea-equipe-projeto " rows="3"
+                            maxlength="500" placeholder="Nome completo de cada integrante"
+                            disabled>{{candidatura.equipe}}</textarea>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /Modal TCC Startup -->
+              <!-- Modal Projeto Interno -->
+              <div *ngIf="candidatura.tipoProjeto == 'Projeto Interno'">
+                <div class="modal-dialog modal-lg" role=" document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="ModalLabel">{{candidatura.nomeProjeto}} (Projeto Interno)</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form class="font120">
+                        <div class="form-group">
+                          <label for="curso-fiec" class="text-dark">Curso FIEC</label>
+                          <select class="form-control text-dark font100" id="select-curso-fiec" disabled>
+                            <option>{{candidatura.curso}}</option>
+                          </select>
+                        </div>
+
+
+                        <div class="form-group">
+                          <label for="nome-responsavel" class="text-dark">Nome do Responsável</label>
+                          <textarea class="form-control text-dark font100" id="nome-responsavel" rows="1"
+                            maxlength="1000" disabled>{{candidatura.nomeResponsavel}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="tipo-Projeto " class="text-dark ">Tipo do Projeto</label>
+                          <select class="form-control text-dark font100" id="select-tipo-Projeto" disabled>
+                            <option>{{candidatura.tipo}}</option>
+                          </select>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="resumo-Projeto " class="text-dark ">Resumo do Projeto </label>
+                          <textarea class="form-control text-dark font100" id="resumo-Projeto " rows="3"
+                            maxlength="1000" placeholder="máx. 1000 caraceteres"
+                            disabled>{{candidatura.resumo}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="desc-Projeto " class="text-dark ">Descrição do Projeto</label>
+                          <textarea class="form-control text-dark font100" id="desc-Projeto" rows="3"
+                            placeholder="Detalhes da proposta" disabled>{{candidatura.descricao}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="equipe-Projeto " class="text-dark ">Equipe do Projeto</label>
+                          <textarea class="form-control text-dark font100" id="equipe-Projeto" rows="3" maxlength="1000"
+                            placeholder="Nome completo de cada integrante" disabled>{{candidatura.equipe}}</textarea>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /Modal Projeto Interno -->
+              <!-- Modal Projeto Externo -->
+              <div *ngIf="candidatura.tipoProjeto == 'Projeto Externo'">
+                <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="ModalLabel">{{candidatura.nomeProjeto}} (Projeto Externo)
+                      </h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form class="font120">
+                        <div class="row form-group">
+                          <div class="col">
+                            <label for="solicitante" class="text-dark ">Solicitante</label>
+                            <textarea class="form-control text-dark font100" id="solicitante" rows="1"
+                              disabled>{{candidatura.solicitante}}</textarea>
+                          </div>
+                          <div class="col">
+                            <label for="tipo-solicitante" class="text-dark ">Filiação</label>
+                            <select class="form-control text-dark font100" id="select-tipo-solicitante" disabled>
+                              <option>{{candidatura.filiacao}}</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="row form-group">
+                          <div class="col">
+                            <label for="nome-responsavel" class="text-dark ">Nome do Responsável</label>
+                            <textarea class="form-control text-dark font100" id="nome-responsavel" rows="1"
+                              disabled>{{candidatura.nomeResponsavel}}</textarea>
+                          </div>
+                          <div class="col">
+                            <label for="telefone-responsavel" class="text-dark ">Telefone do Responsável</label>
+                            <textarea class="form-control text-dark font100" id="telefone-responsavel" rows="1"
+                              disabled>{{candidatura.telefoneResponsavel}}</textarea>
+                          </div>
+                        </div>
+
+                        <div class="row form-group">
+                          <div class="col-sm-6">
+                            <label for="email-responsavel" class="text-dark ">E-mail do Responsável</label>
+                            <textarea class="form-control text-dark font100" id="email-responsavel" rows="1"
+                              disabled>{{candidatura.emailResponsavel}}</textarea>
+                          </div>
+                          <div class="col">
+                            <label for="remuneracao" class="text-dark ">Remuneração</label>
+                            <textarea class="form-control text-dark font100" id="remuneracao" rows="1"
+                              disabled>R$ {{candidatura.remuneracao}}</textarea>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="tipo-projeto" class="text-dark ">Tipo do projeto</label>
+                          <select class="form-control  text-dark font100" id="select-tipo-projeto" disabled>
+                            <option>{{candidatura.tipo}}</option>
+                          </select>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="resumo-Projeto " class="text-dark ">Resumo do Projeto </label>
+                          <textarea class="form-control text-dark font100" id="resumo-Projeto " rows="3"
+                            maxlength="1000" placeholder="máx. 1000 caraceteres"
+                            disabled>{{candidatura.resumo}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="desc-Projeto " class="text-dark ">Descrição do Projeto</label>
+                          <textarea class="form-control text-dark font100" id="desc-Projeto" rows="3"
+                            placeholder="Detalhes da proposta" disabled>{{candidatura.descricao}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="equipe-Projeto " class="text-dark ">Equipe do Projeto</label>
+                          <textarea class="form-control text-dark font100" id="equipe-Projeto" rows="3" maxlength="1000"
+                            placeholder="Nome completo de cada integrante" disabled>{{candidatura.equipe}}</textarea>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /Modal Projeto Externo -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /Reprovados -->
+</div>

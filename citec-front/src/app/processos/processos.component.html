@@ -1,0 +1,135 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-4">
+  <a class="navbar-brand" href="home">CITEC</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      <a class="nav-item nav-link" [routerLink]="[ '/home' ]">Agendas</a>
+      <a class="nav-item nav-link" [routerLink]="[ '/candidatura' ]">Candidatura</a>
+      <a class="nav-item nav-link" [routerLink]="[ '/avaliacao' ]">Avaliação</a>
+      <a class="nav-item nav-link" href="http://cronograma.fiecdev.kinghost.net/#/login">Gestão de projetos</a>
+      <a class="nav-item nav-link active" [routerLink]="[ '/processos' ]">Processos<span
+          class="sr-only">(current)</span></a>
+      <a class="nav-item nav-link" [routerLink]="[ '/projetos' ]">Projetos</a>
+      <a (click)="sair()" class="material-icons nav-item nav-link">
+        exit_to_app
+      </a>
+    </div>
+  </div>
+</nav>
+<div class="container">
+  <div class="shadow p-1 mb-1 bg-light">
+    <div class="card border-0">
+      <div class="card-header bg-light text-center h2">
+        Modelo de documentação
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="card m-1" style="width: 22rem;">
+            <div class="card-body">
+              <h5 class="card-title">Planejamento</h5>
+              <p class="card-text">
+                <span class="pointer" (click)="onDownload(modelo.id,modelo.nomeArquivo)"
+                  *ngFor="let modelo of modelos.modeloPlanejamento">
+                  {{modelo.nomeArquivo}}</span>
+              </p>
+              <a class="card-link pointer" (click)="modalModelo('Planejamento',modelos.modeloPlanejamento)"
+                *ngIf="tipo == 'A'">Atualizar</a>
+            </div>
+          </div>
+          <div class="card m-1" style="width: 22rem;">
+            <div class="card-body">
+              <h5 class="card-title">Desenvolvimento</h5>
+              <p class="card-text">
+                <span class="pointer" (click)="onDownload(modelo.id,modelo.nomeArquivo)"
+                  *ngFor="let modelo of modelos.modeloDesenvolvimento">
+                  {{modelo.nomeArquivo}}</span>
+              </p>
+              <a class="card-link pointer" (click)="modalModelo('Desenvolvimento',modelos.modeloDesenvolvimento)"
+                *ngIf="tipo == 'A'">Atualizar</a>
+            </div>
+          </div>
+          <div class="card m-1" style="width: 22rem;">
+            <div class="card-body">
+              <h5 class="card-title">Homologação / Entrega Final</h5>
+              <p class="card-text">
+                <span class="pointer" (click)="onDownload(modelo.id,modelo.nomeArquivo)"
+                  *ngFor="let modelo of modelos.modeloHomologacao">
+                  {{modelo.nomeArquivo}}</span>
+              </p>
+              <a class="card-link pointer"
+                (click)="modalModelo('Homologação / Entrega Final',modelos.modeloHomologacao)"
+                *ngIf="tipo == 'A'">Atualizar</a>
+            </div>
+          </div>
+          <div class="card m-1" style="width: 22rem;">
+            <div class="card-body">
+              <h5 class="card-title">Detalhamento de requisitos</h5>
+              <p class="card-text">
+                <span class="pointer" (click)="onDownload(modelo.id,modelo.nomeArquivo)"
+                  *ngFor="let modelo of modelos.modeloDetalhamento">
+                  {{modelo.nomeArquivo}}
+                </span>
+              </p>
+              <a class="card-link pointer"
+                (click)="modalModelo('Detalhamento de requisitos',modelos.modeloDetalhamento)"
+                *ngIf="tipo == 'A'">Atualizar</a>
+            </div>
+          </div>
+          <div class="card m-1" style="width: 22rem;">
+            <div class="card-body">
+              <h5 class="card-title">Testes</h5>
+              <p class="card-text">
+                <span class="pointer" (click)="onDownload(modelo.id,modelo.nomeArquivo)"
+                  *ngFor="let modelo of modelos.modeloTestes">
+                  {{modelo.nomeArquivo}}</span>
+              </p>
+              <a class="card-link pointer" (click)="modalModelo('Testes',modelos.modeloTestes)"
+                *ngIf="tipo == 'A'">Atualizar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> <!-- / card-body -->
+</div> <!-- / card -->
+<!-- Botão para acionar modal -->
+<button type="button" class="btn btn-primary" hidden id="modalBtn" data-toggle="modal" data-target="#modalModelo">
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="modalModelo" tabindex="-1" role="dialog" aria-labelledby="modalModeloLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalModeloLabel">{{etapa}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-group">
+          <div class="row mb-1" *ngFor="let modelo of modeloAtual">
+            <div class="col">
+              <li class="list-group-item">{{modelo.nomeArquivo}}</li>
+            </div>
+            <div class="col">
+              <button class="btn btn-danger" (click)="deleteModelo(modelo)">Excluir</button>
+            </div>
+          </div>
+        </ul>
+        <div class="custom-file mb-1">
+          <input type="file" class="custom-file-input" id="customFile" (change)="onChange($event)" />
+          <label for="customFile" class="custom-file-label" id="customFileLabel">Selecionar arquivo</label>
+        </div>
+        <button type="button" class="btn btn-primary" (click)="onUpload(etapa)">Enviar</button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,414 @@
+<div>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="home">CITEC</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link" [routerLink]="[ '/home' ]">Agendas</a>
+        <a class="nav-item nav-link active" [routerLink]="[ '/candidatura' ]">Candidatura<span
+            class="sr-only">(current)</span></a>
+        <a class="nav-item nav-link" [routerLink]="[ '/avaliacao' ]">Avaliação</a>
+        <a class="nav-item nav-link" href="http://cronograma.fiecdev.kinghost.net/#/login">Gestão de projetos</a>
+        <a class="nav-item nav-link" [routerLink]="[ '/processos' ]">Processos</a>
+        <a class="nav-item nav-link" [routerLink]="[ '/projetos' ]">Projetos</a>
+        <a (click)="sair()" class="material-icons nav-item nav-link">
+          exit_to_app
+        </a>
+      </div>
+    </div>
+  </nav>
+</div>
+<nav>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist" style="justify-content: center;">
+    <a class="nav-item nav-link active" id="nav-TCC-Startup-tab" data-toggle="tab" href="#nav-TCC-Startup" role="tab"
+      aria-controls="nav-TCC-Startup" aria-selected="true">TCC Startup</a>
+    <a class="nav-item nav-link" id="nav-interno-tab" data-toggle="tab" href="#nav-interno" role="tab"
+      aria-controls="nav-interno " aria-selected="false">Projeto Interno</a>
+    <a class="nav-item nav-link" id="nav-externo-tab" data-toggle="tab" href="#nav-externo" role="tab"
+      aria-controls="nav-externo" aria-selected="false">Projeto Externo</a>
+  </div>
+</nav>
+<!-- MODAIS -->
+<div class="tab-content mt-4" id="nav-tabContent" style="justify-content: center;">
+  <!-- TCC Startup -->
+  <div class="tab-pane fade show active" id="nav-TCC-Startup" role="tabpanel" aria-labelledby="nav-TCC-Startup-tab">
+    <div class="container">
+      <div class="shadow p-1 mb-1 bg-light">
+        <div class="card bg-light text-dark border-0">
+          <div class="card-header text-center bg-light h2">TCC Startup</div>
+          <div class="card-body bg-light some-padding">
+            <form class="font120">
+              <div class="row form-group">
+                <div class="col">
+                  <label for="select-curso" class="text-dark">Curso FIEC</label>
+                  <select class="form-control text-dark font100" [(ngModel)]="tcc.curso"
+                    [ngModelOptions]="{standalone: true}" id=" select-curso">
+                    <option value="Administração">Administração</option>
+                    <option value="Edificações">Edificações</option>
+                    <option value="Enfermagem">Enfermagem</option>
+                    <option value="Informática">Informática</option>
+                    <option value="Farmácia">Farmácia</option>
+                    <option value="Logística">Logística</option>
+                    <option value="Design de interiores">Design de Interiores</option>
+                    <option value="Nutrição">Nutrição</option>
+                    <option value="Cozinha">Cozinha</option>
+                    <option value="Química">Química</option>
+                    <option value="Tecnólogo em processos químicos">Tecnólogo em processos químicos</option>
+                    <option value="Mecânica">Mecânica</option>
+                    <option value="Mecatrônica">Mecatrônica</option>
+                    <option value="Segurança do trabalho">Segurança do trabalho</option>
+                    <option value="Analises Clínicas">Analises Clínicas</option>
+                  </select>
+                </div>
+                <div class="col">
+                  <label for="select-periodo-curso" class="text-dark ">
+                    Periodo
+                  </label>
+                  <select class="form-control text-dark font100" [(ngModel)]="tcc.periodo"
+                    [ngModelOptions]="{standalone: true}" id="select-periodo-curso">
+                    <option value="Vespertino">Vespertino</option>
+                    <option value="Noturno">Noturno</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col">
+                  <label for="select-modulo-curso" class="text-dark ">
+                    Módulo
+                  </label>
+                  <select class="form-control text-dark font100" [(ngModel)]="tcc.modulo"
+                    [ngModelOptions]="{standalone: true}" id="select-modulo-curso">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                  </select>
+                </div>
+                <div class="col">
+                  <label for="select-turma-curso" class="text-dark ">
+                    Turma
+                  </label>
+                  <select class="form-control text-dark font100" [(ngModel)]="tcc.turma"
+                    [ngModelOptions]="{standalone: true}" id="select-turma-curso">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <div>
+                  <!-- [(ngModel)]="tcc" [ngModelOptions]="{standalone: true}" -->
+                  <label class="text-dark ">
+                    Modalidade
+                  </label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" class="custom-control-input btn-dark" name="radio-group-modalidade-curso"
+                    id="radio-modalidade-regular" value="Regular" #regular>
+                  <label class="custom-control-label" for="radio-modalidade-regular">Regular</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" class="custom-control-input" id="radio-modalidade-mediotec"
+                    name="radio-group-modalidade-curso" value="Mediotec" #mediotec>
+                  <label class="custom-control-label" for="radio-modalidade-mediotec">Mediotec</label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="nome-rojeto" class="text-dark">Nome do Projeto </label>
+                <input type="text" class="form-control text-dark font100" id="input-nome-Projeto "
+                  placeholder="Digite o nome do Projeto" [(ngModel)]="tcc.nomeProjeto"
+                  [ngModelOptions]="{standalone: true}" />
+              </div>
+
+              <div class="form-group">
+                <label for="nome-rojeto" class="text-dark ">Nome do Responsável</label>
+                <input type="text" class="form-control text-dark font100" id="input-nome-responsavel-Projeto "
+                  placeholder="Digite o nome do responsável geral do Projeto " [(ngModel)]="tcc.nomeResponsavel"
+                  [ngModelOptions]="{standalone: true}" />
+              </div>
+
+              <div class="form-group">
+                <label for="tipo-Projeto " class="text-dark ">Tipo do Projeto </label>
+                <select class="form-control text-dark font100" id="select-tipo-Projeto " [(ngModel)]="tcc.tipo"
+                  [ngModelOptions]="{standalone: true}">
+                  <option value="Software">Software</option>
+                  <option value="Design">Design</option>
+                  <option value="Jogo">Jogo</option>
+                  <option value="Remédio">Remédio</option>
+                  <option value="Máquina">Máquina</option>
+                  <option value="Produto">Produto</option>
+                  <option value="Serviço">Serviço</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="desc-Projeto " class="text-dark ">Resumo do Projeto </label>
+                <textarea class="form-control text-dark font100" id="textarea-desc-Projeto " rows="3" maxlength="1000"
+                  placeholder="máx. 1000 caraceteres" [(ngModel)]="tcc.resumo" [ngModelOptions]="{standalone:
+                  true}"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="desc-Projeto " class="text-dark ">Descrição do Projeto</label>
+                <textarea class="form-control text-dark font100" id="textarea-desc-Projeto " rows="3"
+                  placeholder="Detalhes da proposta" [(ngModel)]="tcc.descricao"
+                  [ngModelOptions]="{standalone: true}"></textarea>
+                <!-- nao quebrar a linha senao textarea sera preenchida com espaços em branco e
+                                                     o placeholder não aparecerá -->
+              </div>
+
+              <div class="form-group">
+                <label for="desc-Projeto " class="text-dark ">Equipe do Projeto </label>
+                <textarea class="form-control text-dark font100" id="textarea-equipe-Projeto " rows="3" maxlength="500"
+                  placeholder="Nome completo de cada integrante" [(ngModel)]="tcc.equipe" [ngModelOptions]="{standalone:
+                  true}"></textarea>
+                <!-- nao quebrar a linha senao textarea sera preenchida com espaços em branco e
+                                                     o placeholder não aparecerá -->
+              </div>
+            </form>
+          </div> <!-- / card-body -->
+        </div> <!-- / card  -->
+      </div>
+      <div class="d-flex justify-content-end mt-4 mb-4">
+        <div class="mr-3">
+          <button type="button" class="btn btn-light border">
+            Cancelar
+          </button>
+        </div>
+        <div>
+          <button type="button" (click)="candidaturaTCC()" class="btn btn-light border">
+            Confirmar
+          </button>
+        </div>
+      </div>
+    </div> <!-- / container -->
+  </div>
+  <!-- /TCC Startup -->
+  <!-- Projeto interno -->
+  <div class="tab-pane fade" id="nav-interno" role="tabpanel" aria-labelledby="nav-interno-tab">
+    <div class="container">
+      <div class="shadow p-1 mb-1 bg-light">
+        <div class="card-header text-center bg-light h2">Projeto interno </div>
+        <div class="card bg-light border-0">
+          <div class="card-body bg-light">
+            <form class="font120">
+              <div class="form-group">
+                <label for="curso-fiec" class="text-dark">Curso FIEC</label>
+                <select class="form-control text-dark font100" [(ngModel)]="interno.curso"
+                  [ngModelOptions]="{standalone: true}" id="select-curso-fiec">
+                  <option value="Administração">Administração</option>
+                  <option value="Edificações">Edificações</option>
+                  <option value="Enfermagem">Enfermagem</option>
+                  <option value="Informática">Informática</option>
+                  <option value="Farmácia">Farmácia</option>
+                  <option value="Logística">Logística</option>
+                  <option value="Design de interiores">Design de Interiores</option>
+                  <option value="Nutrição">Nutrição</option>
+                  <option value="Cozinha">Cozinha</option>
+                  <option value="Química">Química</option>
+                  <option value="Tecnólogo em processos químicos">Tecnólogo em processos químicos</option>
+                  <option value="Mecânica">Mecânica</option>
+                  <option value="Mecatrônica">Mecatrônica</option>
+                  <option value="Segurança do trabalho">Segurança do trabalho</option>
+                  <option value="Analises Clínicas">Analises Clínicas</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="nome-projeto" class="text-dark">Nome do Projeto</label>
+                <input type="text" class="form-control text-dark font100" [(ngModel)]="interno.nomeProjeto"
+                  [ngModelOptions]="{standalone: true}" id="nome-projeto" placeholder="Nome do Projeto" />
+              </div>
+
+              <div class="form-group">
+                <label for="nome-responsavel" class="text-dark">Nome do Responsável</label>
+                <input type="text" class="form-control text-dark font100" [(ngModel)]="interno.nomeResponsavel"
+                  [ngModelOptions]="{standalone: true}" id="nome-responsavel"
+                  placeholder="Nome do responsável geral do Projeto" />
+              </div>
+
+              <div class="form-group">
+                <label for="tipo-Projeto " class="text-dark ">Tipo do Projeto </label>
+                <select class="form-control text-dark font100" [(ngModel)]="interno.tipo"
+                  [ngModelOptions]="{standalone: true}" id="select-tipo-Projeto">
+                  <option value="Software">Software</option>
+                  <option value="Design">Design</option>
+                  <option value="Jogo">Jogo</option>
+                  <option value="Remédio">Remédio</option>
+                  <option value="Máquina">Máquina</option>
+                  <option value="Produto">Produto</option>
+                  <option value="Serviço">Serviço</option>
+                  <option value="Outro">Outro</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="resumo-Projeto " class="text-dark ">Resumo do Projeto </label>
+                <textarea class="form-control text-dark font100" [(ngModel)]="interno.resumo"
+                  [ngModelOptions]="{standalone: true}" id="resumo-Projeto " rows="3" maxlength="1000"
+                  placeholder="máx. 1000 caraceteres"></textarea>
+                <!-- nao quebrar a linha senao textarea sera preenchida com espaços em branco e
+                                                                 o placeholder não aparecerá -->
+              </div>
+
+              <div class="form-group">
+                <label for="desc-Projeto " class="text-dark ">Descrição do Projeto</label>
+                <textarea class="form-control text-dark font100" [(ngModel)]="interno.descricao"
+                  [ngModelOptions]="{standalone: true}" id="desc-Projeto " rows="3"
+                  placeholder="Detalhes da proposta"></textarea>
+                <!-- nao quebrar a linha senao textarea sera preenchida com espaços em branco e
+                                                                    o placeholder não aparecerá -->
+              </div>
+
+              <div class="form-group">
+                <label for="equipe-Projeto " class="text-dark ">Equipe do Projeto </label>
+                <textarea class="form-control text-dark font100" id="equipe-Projeto" [(ngModel)]="interno.equipe"
+                  [ngModelOptions]="{standalone: true}" rows="3" maxlength="1000"
+                  placeholder="Nome completo de cada integrante"></textarea>
+                <!-- nao quebrar a linha senao textarea sera preenchida com espaços em branco e
+                                                                 o placeholder não aparecerá -->
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end mt-4 mb-4">
+        <div class="mr-3">
+          <button type="button" class="btn btn-light border">
+            Cancelar
+          </button>
+        </div>
+        <div>
+          <button type="button" (click)="candidaturaINTERNO()" class="btn btn-light border">
+            Confirmar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /Projeto interno -->
+  <!-- Projeto externo -->
+  <div class="tab-pane fade" id="nav-externo" role="tabpanel" aria-labelledby="nav-externo-tab">
+    <div class="container">
+      <div class="shadow p-1 mb-1 bg-light">
+        <div class="card-header text-center bg-light h2">Projeto Externo</div>
+        <div class="card-body bg-light">
+          <form class="font120">
+            <div class="row form-group">
+              <div class="col">
+                <label for="solicitante" class="text-dark ">Solicitante</label>
+                <input type="text" [(ngModel)]="externo.solicitante" [ngModelOptions]="{standalone: true}"
+                  class="form-control text-dark font100" id="input-solicitante" placeholder="Nome da instituição">
+              </div>
+              <div class="col">
+                <label for="tipo-solicitante" class="text-dark ">Filiação</label>
+                <select class="form-control text-dark font100" [(ngModel)]="externo.filiacao"
+                  [ngModelOptions]="{standalone: true}" id="select-tipo-solicitante">
+                  <option value="Empresa privada">Empresa privada</option>
+                  <option value="Orgão público">Orgão Público</option>
+                  <option value="Associação/Comunidade">Associação/Comunidade</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row form-group">
+              <div class="col">
+                <label for="nome-responsavel" class="text-dark ">Nome do Responsável</label>
+                <input type="text" [(ngModel)]="externo.nomeResponsavel" [ngModelOptions]="{standalone: true}"
+                  class="form-control text-dark font100" id="input-nom-projeto"
+                  placeholder="Nome do responsável pelo projeto">
+              </div>
+              <div class="col">
+                <label for="telefone-responsavel" class="text-dark ">Telefone do Responsável</label>
+                <input type="text" [(ngModel)]="externo.telefoneResponsavel" [ngModelOptions]="{standalone: true}"
+                  class="form-control text-dark font100" id="input-nom-projeto"
+                  placeholder="Número de telefone do responsável pelo projeto">
+              </div>
+            </div>
+
+            <div class="row form-group">
+              <div class="col-sm-6">
+                <label for="email-responsavel" class="text-dark ">E-mail do Responsável</label>
+                <input type="email" [(ngModel)]="externo.emailResponsavel" [ngModelOptions]="{standalone: true}"
+                  class="form-control text-dark font100" id="input-nom-projeto"
+                  placeholder="Endereço de e-mail do responsável pelo projeto">
+              </div>
+            </div>
+
+            <div class="row form-group">
+              <div class="col">
+                <label for="nome-rojeto" class="text-dark ">Nome do projeto</label>
+                <input type="text" [(ngModel)]="externo.nomeProjeto" [ngModelOptions]="{standalone: true}"
+                  class="form-control text-dark font100" id="input-nom-projeto" placeholder="Nome do projeto">
+              </div>
+              <div class="col">
+                <label for="input-orcamentoProjeto" class="text-dark ">Orçamento do projeto</label>
+                <input type="number" [(ngModel)]="externo.orcamentoProjeto" [ngModelOptions]="{standalone: true}"
+                  class="form-control text-dark font100" id="input-orcamentoProjeto" placeholder="R$ 9999,99">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="tipo-projeto" class="text-dark ">Tipo do projeto</label>
+              <select class="form-control  text-dark font100" [(ngModel)]="externo.tipo"
+                [ngModelOptions]="{standalone: true}" id="select-tipo-projeto">
+                <option value="Software">Software</option>
+                <option value="Design">Design</option>
+                <option value="Jogo">Jogo</option>
+                <option value="Remédio">Remédio</option>
+                <option value="Máquina">Máquina</option>
+                <option value="Produto">Produto</option>
+                <option value="Serviço">Serviço</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="res-projeto" class="text-dark ">Resumo do projeto</label>
+              <textarea class="form-control text-dark font100" [(ngModel)]="externo.resumo"
+                [ngModelOptions]="{standalone: true}" id="textarea-res-projeto" rows="3" maxlength="1000"
+                placeholder="máx. 1000 caraceteres"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="desc-projeto" class="text-dark ">Descrição do projeto</label>
+              <textarea class="form-control text-dark font100" [(ngModel)]="externo.descricao"
+                [ngModelOptions]="{standalone: true}" id="textarea-desc-projeto" rows="3"
+                placeholder="Detalhes da proposta"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="equipe-projeto" class="text-dark ">Equipe do projeto</label>
+              <textarea class="form-control text-dark font100" [(ngModel)]="externo.equipe"
+                [ngModelOptions]="{standalone: true}" id="textarea-equipe-projeto" rows="3" maxlength="1000"
+                placeholder="Nome completo de cada integrante"></textarea>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end mt-4 mb-4">
+        <div class="mr-3">
+          <button type="button" class="btn btn-light border">
+            Cancelar
+          </button>
+        </div>
+        <div>
+          <button type="button" (click)="candidaturaEXTERNO()" class="btn btn-light border">
+            Confirmar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /Projeto externo -->
+</div>
+<!-- /MODAIS -->
