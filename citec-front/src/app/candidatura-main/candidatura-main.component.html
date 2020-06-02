@@ -1,6 +1,8 @@
 <div>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="home">CITEC</a>
+    <a class="navbar-brand" href="home">
+      <img src="../../assets/img/logo.png" width="90" height="60">
+    </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
       aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -12,8 +14,8 @@
             class="sr-only">(current)</span></a>
         <a class="nav-item nav-link" [routerLink]="[ '/avaliacao' ]">Avaliação</a>
         <a class="nav-item nav-link" href="http://cronograma.fiecdev.kinghost.net/#/login">Gestão de projetos</a>
-        <a class="nav-item nav-link" [routerLink]="[ '/processos' ]">Processos</a>
-        <a class="nav-item nav-link" [routerLink]="[ '/projetos' ]">Projetos</a>
+        <a class="nav-item nav-link" [routerLink]="[ '/processos' ]">Portal de Processos</a>
+        <a class="nav-item nav-link" [routerLink]="[ '/projetos' ]">Portal de Projetos</a>
         <a (click)="sair()" class="material-icons nav-item nav-link">
           exit_to_app
         </a>

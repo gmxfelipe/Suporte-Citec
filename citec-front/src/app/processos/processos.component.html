@@ -1,5 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-4">
-  <a class="navbar-brand" href="home">CITEC</a>
+  <a class="navbar-brand" href="home">
+    <img src="../../assets/img/logo.png" width="90" height="60">
+  </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
     aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -10,9 +12,9 @@
       <a class="nav-item nav-link" [routerLink]="[ '/candidatura' ]">Candidatura</a>
       <a class="nav-item nav-link" [routerLink]="[ '/avaliacao' ]">Avaliação</a>
       <a class="nav-item nav-link" href="http://cronograma.fiecdev.kinghost.net/#/login">Gestão de projetos</a>
-      <a class="nav-item nav-link active" [routerLink]="[ '/processos' ]">Processos<span
+      <a class="nav-item nav-link active" [routerLink]="[ '/processos' ]">Portal de Processos<span
           class="sr-only">(current)</span></a>
-      <a class="nav-item nav-link" [routerLink]="[ '/projetos' ]">Projetos</a>
+      <a class="nav-item nav-link" [routerLink]="[ '/projetos' ]">Portal de Projetos</a>
       <a (click)="sair()" class="material-icons nav-item nav-link">
         exit_to_app
       </a>
@@ -25,11 +27,12 @@
       <div class="card-header bg-light text-center h2">
         Modelo de documentação
       </div>
+      <!-- Start Primeira fileira de card -->
       <div class="card-body">
         <div class="row">
           <div class="card m-1" style="width: 22rem;">
             <div class="card-body">
-              <h5 class="card-title">Planejamento</h5>
+              <h5 class="card-title">1 - Planejamento</h5>
               <p class="card-text">
                 <span class="pointer" (click)="onDownload(modelo.id,modelo.nomeArquivo)"
                   *ngFor="let modelo of modelos.modeloPlanejamento">
@@ -39,9 +42,10 @@
                 *ngIf="tipo == 'A'">Atualizar</a>
             </div>
           </div>
+
           <div class="card m-1" style="width: 22rem;">
             <div class="card-body">
-              <h5 class="card-title">Desenvolvimento</h5>
+              <h5 class="card-title">3 - Desenvolvimento</h5>
               <p class="card-text">
                 <span class="pointer" (click)="onDownload(modelo.id,modelo.nomeArquivo)"
                   *ngFor="let modelo of modelos.modeloDesenvolvimento">
@@ -51,9 +55,10 @@
                 *ngIf="tipo == 'A'">Atualizar</a>
             </div>
           </div>
+
           <div class="card m-1" style="width: 22rem;">
             <div class="card-body">
-              <h5 class="card-title">Homologação / Entrega Final</h5>
+              <h5 class="card-title">5 - Homologação / Entrega Final</h5>
               <p class="card-text">
                 <span class="pointer" (click)="onDownload(modelo.id,modelo.nomeArquivo)"
                   *ngFor="let modelo of modelos.modeloHomologacao">
@@ -64,9 +69,29 @@
                 *ngIf="tipo == 'A'">Atualizar</a>
             </div>
           </div>
+          <br>
           <div class="card m-1" style="width: 22rem;">
             <div class="card-body">
-              <h5 class="card-title">Detalhamento de requisitos</h5>
+              <h5 class="card-title">2 - Detalhamento de requisitos</h5>
+              <p class="card-text">
+                <span class="pointer" (click)="onDownload(modelo.id,modelo.nomeArquivo)"
+                  *ngFor="let modelo of modelos.modeloHomologacao">
+                  {{modelo.nomeArquivo}}</span>
+              </p>
+              <a class="card-link pointer"
+                (click)="modalModelo('Homologação / Entrega Final',modelos.modeloHomologacao)"
+                *ngIf="tipo == 'A'">Atualizar</a>
+            </div>
+          </div>
+
+          
+
+            <!-- End Primeira fileira de card -->
+
+            <!-- Start Primeira fileira de card -->
+          <div class="card m-1" style="width: 22rem;">
+            <div class="card-body">
+              <h5 class="card-title">4 - Testes</h5>
               <p class="card-text">
                 <span class="pointer" (click)="onDownload(modelo.id,modelo.nomeArquivo)"
                   *ngFor="let modelo of modelos.modeloDetalhamento">
@@ -78,9 +103,10 @@
                 *ngIf="tipo == 'A'">Atualizar</a>
             </div>
           </div>
+
           <div class="card m-1" style="width: 22rem;">
             <div class="card-body">
-              <h5 class="card-title">Testes</h5>
+              <h5 class="card-title">6 - Documentos Gerais</h5>
               <p class="card-text">
                 <span class="pointer" (click)="onDownload(modelo.id,modelo.nomeArquivo)"
                   *ngFor="let modelo of modelos.modeloTestes">
@@ -89,6 +115,7 @@
               <a class="card-link pointer" (click)="modalModelo('Testes',modelos.modeloTestes)"
                 *ngIf="tipo == 'A'">Atualizar</a>
             </div>
+            <!-- End Primeira fileira de card -->
           </div>
         </div>
       </div>

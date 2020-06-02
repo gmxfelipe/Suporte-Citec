@@ -779,7 +779,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var URL = "http://localhost:3006"; // DEV
+var URL = "fiecdev.kinghost.net:21365"; // DEV
 var BackendService = /** @class */ (function () {
     function BackendService(http) {
         this.http = http;

@@ -132,5 +132,8 @@
       }
     }
   },
-  "defaultProject": "citec"
+  "defaultProject": "citec",
+  "cli": {
+    "analytics": "5962a85c-4f45-42a8-a119-4dfbb3041183"
+  }
 }

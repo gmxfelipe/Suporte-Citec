@@ -17,7 +17,7 @@ module.exports = function (app) {
                     try {
                         //Retorna uma resposta de download, passando o caminho do arquivo e o nome do arquivo
                         res.download(variaveis.dir + result[0].caminho, result[0].nomeArquivo)
-                    } catch {
+                    } catch (err){
                         res.json({
                             result: "Impossível localizar o arquivo",
                             status: 500
