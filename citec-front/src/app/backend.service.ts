@@ -2,7 +2,9 @@ import { Injectable } from "@angular/core";
 import { Http } from "@angular/http";
 import { environment } from '../environments/environment';
 
-const URL = environment.api; // DEV
+// const URL = environment.api; // PROD
+
+const URL = "http://citec.fiecdev.com.br" // DEV 
 
 @Injectable({
   providedIn: "root"

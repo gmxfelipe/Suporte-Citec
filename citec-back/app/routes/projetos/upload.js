@@ -1,18 +1,27 @@
 var formidable = require('formidable');
+const multer = require('multer')
 var fs = require('fs')
 var variaveis = require('../../../var');
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, './uploads')
+    }
+})
+
+const teste = multer({storage})
+
 module.exports = function (app) {
     var upload = function (req, res, next) {
+        console.log('teste');
         var conection = app.infra.conectionFactory();
         var projetoDAO = new app.infra.projetoDAO(conection);
-        var form = new formidable.IncomingForm();
+        console.log(req.fields)
         try {
-            form.maxFileSize = 200 * 1024 * 1024;
-            form.parse(req, function (erro, fields, files) {
-                let oldPath = files.file.path; //foto -> nome campo no html
-                let nome = files.file.name; //nome padrão para a foto
+                let oldPath = req.file.path; //foto -> nome campo no html
+                let nome = req.file.originalname; //nome padrão para a foto
                 let path = `/uploads/${nome}`; //caminho relativo, que irá para o banco
-                let fullPath = variaveis.dir + path; //caminho "completo" para o sistema de arquivos
+                let fullPath = req.file.destination+'/'+nome; //caminho "completo" para o sistema de arquivos
                 fs.rename(oldPath, fullPath, (erro) => { //move o arquivo da memória para o disco (caminho do projeto)
                     if (erro) {
                         console.log(erro)
@@ -22,8 +31,8 @@ module.exports = function (app) {
                         })
                     } else {
                         let data = {
-                            idcandidatura: fields.id,
-                            etapa: fields.etapa,
+                            idcandidatura: 1,
+                            etapa: '',
                             caminho: path,
                             nomeArquivo: nome
                         }
@@ -45,7 +54,6 @@ module.exports = function (app) {
                         })
                     }
                 });
-            })
         } catch (error) {
             console.log(error);
             res.json({
@@ -55,5 +63,5 @@ module.exports = function (app) {
             conection.end();
         }
     }
-    app.post('/upload', upload);
+    app.post('/upload', teste.single('file'), upload);
 }

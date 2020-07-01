@@ -93,16 +93,17 @@ export class ProcessosComponent implements OnInit {
     if (this.files && this.files.size > 0) {
       this.service.uploadModelo(this.files, etapa).subscribe(res => {
         if (res.json().status == 500) {
-          swal(
-            "ERRO",
-            "Não foi possivel fazer o upload (CONTATE O SETOR DE DESENVOLVIMENTO), status: " +
-            res.json().status +
-            ", erro: " +
-            res.json().result.code +
-            ": " +
-            res.json().result.errno,
-            "error"
-          );
+          // swal(
+          //   "ERRO",
+          //   "Não foi possivel fazer o upload (CONTATE O SETOR DE DESENVOLVIMENTO), status: " +
+          //   res.json().status +
+          //   ", erro: " +
+          //   res.json().result.code +
+          //   ": " +
+          //   res.json().result.errno,
+          //   "error"
+          // );
+          console.log(res.json());
         } else if (res.json().status == 200) {
           swal("SUCESSO", "Upload concluído com sucesso", "success").then(
             () => {

@@ -1,0 +1,2 @@
+// Criptografia de senha (sha2 512) Link ->
+// https://quickhash.com/ 
